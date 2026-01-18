@@ -11,9 +11,9 @@ export function Hero() {
     return (
         <section
             id="home"
-            className="relative h-screen w-full overflow-hidden bg-black antialiased"
+            className="relative min-h-[100svh] w-full bg-black antialiased flex flex-col justify-center"
         >
-            <BackgroundLines className="flex items-center justify-center w-full flex-col px-4">
+            <BackgroundLines className="flex items-center justify-center w-full flex-col px-4 py-20 md:py-0">
                 <div className="p-4 max-w-7xl mx-auto relative z-10 w-full text-center">
                     {/* Status Badge */}
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-neutral-800 bg-neutral-950/50 backdrop-blur-sm mb-8">
@@ -25,10 +25,10 @@ export function Hero() {
                     </div>
 
                     {/* Main Heading */}
-                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 leading-tight">
+                    <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 leading-tight">
                         I build software
                         <br />
-                        that <ColourfulText text="thinks" />.
+                        that <span className="whitespace-nowrap"><ColourfulText text="thinks" /></span>.
                     </h1>
 
                     {/* Sub-heading with text generate effect */}
@@ -40,13 +40,13 @@ export function Hero() {
                     </div>
 
                     {/* Description */}
-                    <p className="mt-6 text-neutral-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+                    <p className="mt-4 md:mt-6 text-neutral-400 text-sm md:text-lg max-w-2xl mx-auto leading-relaxed px-2 md:px-0">
                         The gap between &apos;Demo&apos; and &apos;Production&apos; is engineering. I bridge that gap by
                         connecting advanced AI models with intuitive, high-performance interfaces.
                     </p>
 
                     {/* CTA Button */}
-                    <div className="mt-10 flex justify-center">
+                    <div className="mt-8 md:mt-10 flex justify-center pb-20 md:pb-0">
                         <a href="#projects">
                             <ShimmerButton
                                 shimmerColor="#ffffff"
@@ -62,10 +62,10 @@ export function Hero() {
             </BackgroundLines>
 
             {/* Tech Stack Marquee at Bottom */}
-            <div className="absolute bottom-10 left-0 w-full overflow-hidden z-20">
-                <Marquee className="py-4" pauseOnHover reverse repeat={4}>
+            <div className="absolute bottom-4 md:bottom-10 left-0 w-full overflow-hidden z-20">
+                <Marquee className="py-2 md:py-4" pauseOnHover reverse repeat={4}>
                     {["Next.js", "Python", "Supabase", "Docker", "Stripe", "OpenAI", "LangChain", "Framer Motion"].map((tech) => (
-                        <span key={tech} className="mx-8 text-2xl font-bold text-neutral-500 opacity-50 font-mono">
+                        <span key={tech} className="mx-4 md:mx-8 text-lg md:text-2xl font-bold text-neutral-500 opacity-50 font-mono">
                             {tech}
                         </span>
                     ))}

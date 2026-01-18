@@ -15,7 +15,7 @@ export const BackgroundLines = ({
     return (
         <div
             className={cn(
-                "h-[20rem] md:h-screen w-full bg-white dark:bg-black relative overflow-hidden",
+                "h-full md:h-screen w-full bg-white dark:bg-black relative overflow-hidden",
                 className
             )}
         >
@@ -87,6 +87,7 @@ const SVG = ({ svgOptions }: { svgOptions?: { duration?: number } }) => {
         <motion.svg
             viewBox="0 0 1440 900"
             fill="none"
+            preserveAspectRatio="xMidYMid slice"
             className="absolute inset-0 w-full h-full"
         >
             {paths.map((path, idx) => (

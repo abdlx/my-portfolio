@@ -78,7 +78,7 @@ const CodeLine = React.memo(({
     return (
         <motion.div
             className={cn("flex gap-1 flex-wrap will-change-transform")}
-            style={{ paddingLeft: indent * 24 }}
+            style={{ paddingLeft: typeof window !== 'undefined' && window.innerWidth < 768 ? indent * 12 : indent * 24 }}
             initial={{ opacity: 0, x: -20 }}
             animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
             transition={{
@@ -116,7 +116,7 @@ const METRICS = [85, 65, 90, 45, 75];
 // Optimized Dashboard UI with minimal animations
 const DashboardUI = React.memo(() => {
     return (
-        <div className="aspect-[16/9] rounded-2xl border border-neutral-700/50 bg-gradient-to-br from-neutral-900/90 via-neutral-900/70 to-neutral-950/90 backdrop-blur-xl shadow-[0_0_120px_-20px_rgba(16,185,129,0.15),inset_0_1px_0_rgba(255,255,255,0.05)] overflow-hidden p-4 md:p-8 flex flex-col gap-6 will-change-transform">
+        <div className="aspect-auto md:aspect-[16/9] min-h-[400px] md:min-h-0 rounded-2xl border border-neutral-700/50 bg-gradient-to-br from-neutral-900/90 via-neutral-900/70 to-neutral-950/90 backdrop-blur-xl shadow-[0_0_120px_-20px_rgba(16,185,129,0.15),inset_0_1px_0_rgba(255,255,255,0.05)] overflow-hidden p-4 md:p-8 flex flex-col gap-6 will-change-transform">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -137,8 +137,8 @@ const DashboardUI = React.memo(() => {
             </div>
 
             {/* Main Content */}
-            <div className="grid grid-cols-4 gap-4 md:gap-6 flex-1">
-                <div className="col-span-3 space-y-4 md:space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 flex-1 overflow-hidden">
+                <div className="col-span-1 md:col-span-3 space-y-4 md:space-y-6">
                     {/* Chart Area - Static bars with CSS animation */}
                     <div className="h-40 md:h-52 w-full rounded-2xl bg-gradient-to-br from-neutral-950/80 to-neutral-900/50 border border-neutral-800/60 p-4 md:p-6 relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 to-transparent" />
@@ -195,7 +195,7 @@ const DashboardUI = React.memo(() => {
                 </div>
 
                 {/* Sidebar */}
-                <div className="col-span-1 h-full rounded-2xl bg-gradient-to-br from-neutral-950/60 to-neutral-900/30 border border-neutral-800/40 p-3 md:p-4 space-y-4 relative overflow-hidden">
+                <div className="col-span-1 h-full hidden md:block rounded-2xl bg-gradient-to-br from-neutral-950/60 to-neutral-900/30 border border-neutral-800/40 p-3 md:p-4 space-y-4 relative overflow-hidden">
                     <div className="h-4 w-full bg-neutral-800 rounded-lg" />
                     <div className="h-3 w-2/3 bg-neutral-800/60 rounded-lg" />
 
@@ -345,7 +345,7 @@ export function DeepDive() {
                 style={{ width: progressWidth }}
             />
 
-            <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center" style={{ perspective: "1500px" }}>
+            <div className="sticky top-0 h-[100dvh] w-full overflow-hidden flex items-center justify-center" style={{ perspective: "1500px" }}>
                 {/* Background Effects - reduced motion */}
                 <div className="absolute inset-0">
                     {/* Grid pattern */}
