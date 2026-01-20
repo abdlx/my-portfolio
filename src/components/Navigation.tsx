@@ -28,17 +28,17 @@ const navItems = [
     {
         title: "GitHub",
         icon: <Github className="h-full w-full" />,
-        href: "https://github.com/yourusername",
+        href: "https://github.com/abdlx/",
     },
     {
         title: "LinkedIn",
         icon: <Linkedin className="h-full w-full" />,
-        href: "https://linkedin.com/in/yourusername",
+        href: "https://www.linkedin.com/in/mirza-abdullah-baig-ai-dev/",
     },
     {
         title: "Contact",
         icon: <MessageSquare className="h-full w-full" />,
-        href: "mailto:abdullahalqudsi.dev@gmail.com",
+        href: "mailto:mirzaabdulla300@gmail.com",
     },
 ];
 
