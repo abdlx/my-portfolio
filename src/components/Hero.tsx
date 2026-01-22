@@ -16,13 +16,20 @@ export function Hero() {
             <BackgroundLines className="flex items-center justify-center w-full flex-col px-4 py-20 md:py-0">
                 <div className="p-4 max-w-7xl mx-auto relative z-10 w-full text-center">
                     {/* Status Badge */}
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-neutral-800 bg-neutral-950/50 backdrop-blur-sm mb-8">
+                    <a 
+                        href="https://www.linkedin.com/in/mirza-abdullah-baig-ai-dev/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-neutral-800 bg-neutral-950/50 backdrop-blur-sm mb-8 hover:border-emerald-500/50 hover:bg-neutral-900/50 transition-all duration-300 group cursor-pointer"
+                    >
                         <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                         </span>
-                        <span className="text-neutral-300 text-sm font-mono">System Online | Open to Work</span>
-                    </div>
+                        <span className="text-neutral-300 text-sm font-mono group-hover:text-emerald-400 transition-colors">
+                            System Online | Open to Work
+                        </span>
+                    </a>
 
                     {/* Main Heading */}
                     <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 leading-tight">
