@@ -4,28 +4,22 @@ import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 
 const testimonials = [
     {
-        quote: "Built our entire SaaS MVP in 2 weeks. The AI integration is seamless.",
-        name: "Sarah Chen",
-        designation: "Founder, TechStart",
-        src: "/testimonials/sarah.png"
+        quote: "The sales agent is absolutely fantastic. Very professional work and exceeded our expectations. Highly satisfied!",
+        name: "Mirza Amin Baig",
+        designation: "CEO, ASAS Forge",
+        src: "/testimonials/amin.png"
     },
     {
-        quote: "The latency on our pipeline dropped by 40%. Abdullah understands hardware as well as software.",
-        name: "Marcus Thorne",
-        designation: "CTO, LogisticsCo",
-        src: "/testimonials/marcus.png"
+        quote: "Yaar 3 weeks mai pura MVP bana diya, AI integration bhi bilkul smooth chal raha hai. Worth every penny bhai 💯",
+        name: "Fahad",
+        designation: "Co-Founder, Fulfix",
+        src: "/testimonials/fahad.png"
     },
     {
-        quote: "Incredible attention to detail. Our internal tools feel like a premium consumer product.",
-        name: "Elena Rodriguez",
-        designation: "Product Lead, InnovateAI",
-        src: "/testimonials/elena.png"
-    },
-    {
-        quote: "Efficient, communicative, and technically brilliant. A rare hybrid engineer.",
-        name: "David Park",
-        designation: "Founder, ScaleUp",
-        src: "/testimonials/david.png"
+        quote: "Mashallah bohot detailed kaam kia hai. Har cheez explain karte gaye setup k time. Would definitely recommend to others 👍",
+        name: "Anas Naeem",
+        designation: "Manager, NASLW",
+        src: "/testimonials/anas.png"
     }
 ];
 
