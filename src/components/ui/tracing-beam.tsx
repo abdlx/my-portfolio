@@ -5,6 +5,7 @@ import {
     useTransform,
     useScroll,
     useSpring,
+    useReducedMotion,
 } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +17,18 @@ export const TracingBeam = ({
     className?: string;
 }) => {
     const ref = useRef<HTMLDivElement>(null);
+    const shouldReduceMotion = useReducedMotion();
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+        return () => window.removeEventListener("resize", checkMobile);
+    }, []);
+
     const { scrollYProgress } = useScroll({
         target: ref,
         offset: ["start start", "end start"],
@@ -28,6 +41,19 @@ export const TracingBeam = ({
         if (contentRef.current) {
             setSvgHeight(contentRef.current.offsetHeight);
         }
+
+        // Handle height changes (e.g. from dynamic content)
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (let entry of entries) {
+                setSvgHeight(entry.target.clientHeight);
+            }
+        });
+
+        if (contentRef.current) {
+            resizeObserver.observe(contentRef.current);
+        }
+
+        return () => resizeObserver.disconnect();
     }, []);
 
     const y1 = useSpring(
@@ -45,12 +71,21 @@ export const TracingBeam = ({
         },
     );
 
+    // Skip the beam entirely on mobile for performance
+    if (isMobile || shouldReduceMotion) {
+        return (
+            <div className={cn("relative mx-auto h-full w-full max-w-6xl px-4 md:px-0", className)}>
+                <div ref={contentRef}>{children}</div>
+            </div>
+        );
+    }
+
     return (
         <motion.div
             ref={ref}
             className={cn("relative mx-auto h-full w-full max-w-6xl", className)}
         >
-            <div className="absolute top-3 -left-4 md:-left-20">
+            <div className="absolute top-3 -left-4 md:-left-20 pointer-events-none">
                 <motion.div
                     transition={{
                         duration: 0.2,
@@ -97,7 +132,6 @@ export const TracingBeam = ({
                         fill="none"
                         stroke="url(#tracing-gradient)"
                         strokeWidth="1.25"
-                        className="motion-reduce:hidden"
                         transition={{
                             duration: 10,
                         }}

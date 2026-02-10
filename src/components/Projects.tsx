@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Image from "next/image";
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { CardContainer, CardItem } from "@/components/ui/3d-card";
 import { Paintbrush } from "lucide-react";
@@ -43,9 +44,11 @@ const projects: ProjectData[] = [
             <CardContainer className="inter-var w-full h-full">
                 <CardItem translateZ="50" className="w-full h-full">
                     <div className="w-full aspect-video rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 relative group/image">
-                        <img
+                        <Image
                             src="/projects/fulfix.png"
                             alt="Fulfix Dashboard"
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             className="w-full h-full object-cover opacity-60 group-hover/image:opacity-80 transition-opacity duration-500"
                         />
                         <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black to-transparent" />
@@ -77,10 +80,12 @@ const projects: ProjectData[] = [
         header: (
             <CardContainer className="inter-var w-full h-full">
                 <CardItem translateZ="50" className="w-full h-full">
-                    <div className="w-full aspect-video rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 group/image">
-                        <img
+                    <div className="w-full aspect-video rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 group/image relative">
+                        <Image
                             src="/projects/asas-forge.png"
                             alt="ASAS Forge Dashboard"
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             className="w-full h-full object-cover opacity-60 group-hover/image:opacity-80 transition-opacity duration-500"
                         />
                     </div>
@@ -111,9 +116,11 @@ const projects: ProjectData[] = [
                 <CardItem translateZ="50" className="w-full h-full">
                     <div className="w-full aspect-video rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 group/image relative">
                         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10" />
-                        <img
+                        <Image
                             src="/projects/arsalan-malik.png"
                             alt="Arsalan Malik Concept"
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             className="w-full h-full object-cover opacity-60 group-hover/image:opacity-80 transition-opacity duration-500"
                         />
                     </div>
@@ -144,9 +151,11 @@ const projects: ProjectData[] = [
                 <CardItem translateZ="50" className="w-full h-full">
                     <div className="w-full aspect-video rounded-xl overflow-hidden bg-neutral-900 border border-neutral-800 group/image relative">
                         <div className="absolute inset-0 bg-emerald-500/10 mix-blend-overlay" />
-                        <img
+                        <Image
                             src="/projects/Echo-Harvest.png"
                             alt="EchoHarvest Dashboard"
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             className="w-full h-full object-cover opacity-60 group-hover/image:opacity-80 transition-opacity duration-500"
                         />
                     </div>

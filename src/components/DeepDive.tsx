@@ -1,22 +1,22 @@
 "use client";
 import React, { useRef, useEffect, useState, useMemo } from "react";
-import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
+import { motion, useScroll, useTransform, MotionValue, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 // Reduced particle count and simplified animation using CSS
 const FloatingParticles = React.memo(({ progress }: { progress: MotionValue<number> }) => {
     const [isMounted, setIsMounted] = useState(false);
+    const shouldReduceMotion = useReducedMotion();
 
-    // Reduced to 12 particles (from 30) for better performance
     const particles = useMemo(() =>
-        Array.from({ length: 12 }, (_, i) => ({
+        Array.from({ length: shouldReduceMotion ? 6 : 12 }, (_, i) => ({
             id: i,
             size: 3 + (i % 3),
             x: (i * 8.3) % 100,
             y: (i * 7.7) % 100,
             animationDuration: 15 + (i % 3) * 5,
             animationDelay: i * 0.5,
-        })), []
+        })), [shouldReduceMotion]
     );
 
     useEffect(() => {
@@ -30,7 +30,7 @@ const FloatingParticles = React.memo(({ progress }: { progress: MotionValue<numb
     return (
         <motion.div
             className="absolute inset-0 overflow-hidden pointer-events-none will-change-transform"
-            style={{ opacity }}
+            style={{ opacity: shouldReduceMotion ? 0.3 : opacity }}
         >
             {particles.map((p) => (
                 <div
@@ -44,6 +44,7 @@ const FloatingParticles = React.memo(({ progress }: { progress: MotionValue<numb
                         boxShadow: `0 0 ${p.size * 2}px rgba(16, 185, 129, 0.5)`,
                         animationDuration: `${p.animationDuration}s`,
                         animationDelay: `${p.animationDelay}s`,
+                        animationPlayState: shouldReduceMotion ? "paused" : "running",
                     }}
                 />
             ))}
@@ -75,15 +76,16 @@ const CodeLine = React.memo(({
     indent?: number;
     isVisible: boolean;
 }) => {
+    const shouldReduceMotion = useReducedMotion();
     return (
         <motion.div
             className={cn("flex gap-1 flex-wrap will-change-transform")}
-            style={{ paddingLeft: typeof window !== 'undefined' && window.innerWidth < 768 ? indent * 12 : indent * 24 }}
-            initial={{ opacity: 0, x: -20 }}
-            animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+            style={{ paddingLeft: indent * 16 }}
+            initial={{ opacity: 0, x: shouldReduceMotion ? 0 : -20 }}
+            animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: shouldReduceMotion ? 0 : -20 }}
             transition={{
-                duration: 0.4,
-                delay: delay * 0.05,
+                duration: shouldReduceMotion ? 0.2 : 0.4,
+                delay: shouldReduceMotion ? 0 : delay * 0.05,
                 ease: "easeOut"
             }}
         >
@@ -274,6 +276,7 @@ DashboardUI.displayName = "DashboardUI";
 export function DeepDive() {
     const containerRef = useRef<HTMLDivElement>(null);
     const [codeVisible, setCodeVisible] = useState(false);
+    const shouldReduceMotion = useReducedMotion();
 
     const { scrollYProgress } = useScroll({
         target: containerRef,

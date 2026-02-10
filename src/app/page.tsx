@@ -1,14 +1,19 @@
+"use client";
+
+import dynamic from "next/dynamic";
 import { Hero } from "@/components/Hero";
-import { Pipeline } from "@/components/Pipeline";
-import { Projects } from "@/components/Projects";
-import { Lab } from "@/components/Lab";
-import { Navigation } from "@/components/Navigation";
-import { Metrics } from "@/components/Metrics";
-import { Testimonials } from "@/components/Testimonials";
-import { KnowledgeGraph } from "@/components/KnowledgeGraph";
-import { Contact } from "@/components/Contact";
-import { TracingBeam } from "@/components/ui/tracing-beam";
-import { DeepDive } from "@/components/DeepDive";
+
+// Dynamic imports for components below the fold
+const DeepDive = dynamic(() => import("@/components/DeepDive").then(mod => mod.DeepDive), { ssr: false });
+const Pipeline = dynamic(() => import("@/components/Pipeline").then(mod => mod.Pipeline), { ssr: false });
+const Projects = dynamic(() => import("@/components/Projects").then(mod => mod.Projects), { ssr: false });
+const Lab = dynamic(() => import("@/components/Lab").then(mod => mod.Lab), { ssr: false });
+const Navigation = dynamic(() => import("@/components/Navigation").then(mod => mod.Navigation), { ssr: false });
+const Metrics = dynamic(() => import("@/components/Metrics").then(mod => mod.Metrics), { ssr: false });
+const Testimonials = dynamic(() => import("@/components/Testimonials").then(mod => mod.Testimonials), { ssr: false });
+const KnowledgeGraph = dynamic(() => import("@/components/KnowledgeGraph").then(mod => mod.KnowledgeGraph), { ssr: false });
+const Contact = dynamic(() => import("@/components/Contact").then(mod => mod.Contact), { ssr: false });
+const TracingBeam = dynamic(() => import("@/components/ui/tracing-beam").then(mod => mod.TracingBeam), { ssr: false });
 
 export default function Home() {
   return (
