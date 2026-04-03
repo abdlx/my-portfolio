@@ -2,12 +2,34 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import { FloatingDock } from "@/components/ui/floating-dock";
-import { Home, Terminal, FlaskConical, Mail, Cpu, Github, Linkedin, MessageSquare, FileText, Bot } from "lucide-react";
+import { Home, Terminal, FlaskConical, Mail, Cpu, Github, Linkedin, MessageSquare, FileText, Bot, Menu, X } from "lucide-react";
 import GlassSurface from "./GlassSurface";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { AITerminal } from "./AITerminal";
 import { CVWindow } from "./CVWindow";
+import { motion, AnimatePresence } from "framer-motion";
+
+const IconLayoutNavbarCollapse = ({ className }: { className?: string }) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={className}
+        >
+            <path d="M4 6h16" />
+            <path d="M4 12h16" />
+            <path d="M4 18h16" />
+        </svg>
+    );
+};
 
 const internalItems = [
     {
@@ -50,6 +72,7 @@ export function Navigation() {
     const [activeSection, setActiveSection] = useState("#home");
     const [isTerminalOpen, setIsTerminalOpen] = useState(false);
     const [isCVOpen, setIsCVOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const observerOptions = {
@@ -106,8 +129,8 @@ export function Navigation() {
 
     return (
         <>
-            {/* Top Glass Navbar */}
-            <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50">
+            {/* Desktop Top Glass Navbar */}
+            <div className="fixed top-12 left-1/2 -translate-x-1/2 z-50 hidden md:block">
                 <GlassSurface
                     width="auto"
                     height={46}
@@ -136,6 +159,127 @@ export function Navigation() {
                 </GlassSurface>
             </div>
 
+            {/* Mobile Consolidated Menu */}
+            <div className="fixed top-8 right-6 z-50 md:hidden">
+                <div className="flex flex-col items-end gap-4 relative">
+                    {/* Top Row: Nav Links + Hamburger */}
+                    <div className="flex items-center gap-3">
+                        <AnimatePresence>
+                            {isMobileMenuOpen && (
+                                <motion.div 
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 20 }}
+                                    className="flex items-center gap-1 bg-neutral-900/40 backdrop-blur-md rounded-full px-3 py-1.5 border border-white/5 shadow-2xl mr-1"
+                                >
+                                    {internalItems.map((item) => (
+                                        <Link
+                                            key={item.title}
+                                            href={item.href}
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className={cn(
+                                                "px-3 py-1 rounded-full text-[10px] font-medium tracking-wider uppercase transition-all duration-300",
+                                                activeSection === item.href
+                                                    ? "bg-[#818CF8]/20 text-[#818CF8]"
+                                                    : "text-neutral-400"
+                                            )}
+                                        >
+                                            {item.title}
+                                        </Link>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <motion.button
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className="relative z-[60] flex items-center justify-center h-12 w-12 rounded-full overflow-hidden"
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <GlassSurface
+                                width={48}
+                                height={48}
+                                borderRadius={24}
+                                className="flex items-center justify-center p-0"
+                                brightness={15}
+                                opacity={0.8}
+                                backgroundOpacity={0.4}
+                            >
+                                <AnimatePresence mode="wait">
+                                    {isMobileMenuOpen ? (
+                                        <motion.div
+                                            key="close"
+                                            initial={{ opacity: 0, rotate: -90 }}
+                                            animate={{ opacity: 1, rotate: 0 }}
+                                            exit={{ opacity: 0, rotate: 90 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <X className="h-5 w-5 text-neutral-300" />
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            key="menu"
+                                            initial={{ opacity: 0, rotate: 90 }}
+                                            animate={{ opacity: 1, rotate: 0 }}
+                                            exit={{ opacity: 0, rotate: -90 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <IconLayoutNavbarCollapse className="h-5 w-5 text-neutral-300" />
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </GlassSurface>
+                        </motion.button>
+                    </div>
+
+                    {/* Bottom Area: Dock Items */}
+                    <AnimatePresence>
+                        {isMobileMenuOpen && (
+                            <div className="flex flex-col gap-3 pr-1">
+                                {dockItems.map((item, idx) => (
+                                    <motion.div
+                                        key={item.title}
+                                        initial={{ opacity: 0, y: -20, scale: 0.8 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: -20, scale: 0.8 }}
+                                        transition={{ 
+                                            delay: idx * 0.05,
+                                            type: "spring",
+                                            stiffness: 300,
+                                            damping: 20
+                                        }}
+                                    >
+                                        {item.onClick ? (
+                                            <button
+                                                onClick={(e) => {
+                                                    item.onClick?.(e);
+                                                    setIsMobileMenuOpen(false);
+                                                }}
+                                                className="h-10 w-10 rounded-full flex items-center justify-center bg-neutral-900/80 backdrop-blur-md border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)] active:scale-90 transition-transform"
+                                            >
+                                                <div className="h-4 w-4 text-neutral-200">
+                                                    {item.icon}
+                                                </div>
+                                            </button>
+                                        ) : (
+                                            <Link
+                                                href={item.href}
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className="h-10 w-10 rounded-full flex items-center justify-center bg-neutral-900/80 backdrop-blur-md border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)] active:scale-90 transition-transform"
+                                            >
+                                                <div className="h-4 w-4 text-neutral-200">
+                                                    {item.icon}
+                                                </div>
+                                            </Link>
+                                        )}
+                                    </motion.div>
+                                ))}
+                            </div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </div>
+
             {/* AI Terminal Window */}
             <AITerminal isOpen={isTerminalOpen} setIsOpen={setIsTerminalOpen} />
 
@@ -143,7 +287,7 @@ export function Navigation() {
             <CVWindow isOpen={isCVOpen} setIsOpen={setIsCVOpen} />
 
             {/* Bottom External Dock */}
-            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 hidden md:block">
                 <FloatingDock items={dockItems} />
             </div>
         </>
