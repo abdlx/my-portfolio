@@ -50,7 +50,7 @@ const internalItems = [
     },
 ];
 
-const externalItems = [
+const externalItems: { title: string; icon: React.ReactNode; href: string; onClick?: (e: React.MouseEvent) => void }[] = [
     {
         title: "GitHub",
         icon: <Github className="h-full w-full" />,
@@ -129,8 +129,24 @@ export function Navigation() {
 
     return (
         <>
-            {/* Desktop Top Glass Navbar */}
-            <div className="fixed top-12 left-1/2 -translate-x-1/2 z-50 hidden md:block">
+            {/* Desktop Navigation & Brand */}
+            <div className="fixed top-12 left-1/2 -translate-x-1/2 z-50 hidden md:flex items-center gap-3">
+                {/* Brand Pill */}
+                <GlassSurface
+                    width="auto"
+                    height={46}
+                    borderRadius={23}
+                    className="flex items-center px-6"
+                    brightness={15}
+                    opacity={0.8}
+                    backgroundOpacity={0.4}
+                >
+                    <span className="text-sm font-semibold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-neutral-400">
+                        Abdullah
+                    </span>
+                </GlassSurface>
+
+                {/* Main Navbar */}
                 <GlassSurface
                     width="auto"
                     height={46}
@@ -156,6 +172,26 @@ export function Navigation() {
                             </Link>
                         ))}
                     </div>
+                </GlassSurface>
+            </div>
+
+            {/* Mobile Brand Pill */}
+            <div className={cn(
+                "fixed top-8 left-6 z-50 md:hidden transition-opacity duration-300",
+                isMobileMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+            )}>
+                <GlassSurface
+                    width="auto"
+                    height={48}
+                    borderRadius={24}
+                    className="flex items-center px-4"
+                    brightness={15}
+                    opacity={0.8}
+                    backgroundOpacity={0.4}
+                >
+                    <span className="text-sm font-semibold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-neutral-400">
+                        Abdullah
+                    </span>
                 </GlassSurface>
             </div>
 
