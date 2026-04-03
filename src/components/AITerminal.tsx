@@ -23,6 +23,7 @@ export function AITerminal({
         if (e) e.preventDefault();
         if (!input || isLoading) return;
         
+        playClick();
         // Vercel AI SDK 4+ sendMessage handles the user message
         const currentInput = input;
         setInput(""); // Promptly clear input for better UX
@@ -77,7 +78,11 @@ export function AITerminal({
                             {/* Traffic Lights */}
                             <div className="flex gap-2 group/lights z-10">
                                 <button
-                                    onClick={() => setIsOpen(false)}
+                                    onClick={() => {
+                                        playClick();
+                                        setIsOpen(false);
+                                    }}
+                                    onMouseEnter={() => playHover()}
                                     className="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e] flex items-center justify-center overflow-hidden"
                                 >
                                     <X className="w-2 h-2 text-black/60 opacity-0 group-hover/lights:opacity-100 transition-opacity" />
@@ -121,8 +126,10 @@ export function AITerminal({
                                             <button
                                                 key={s}
                                                 onClick={() => {
+                                                    playClick();
                                                     setInput(s);
                                                 }}
+                                                onMouseEnter={() => playHover()}
                                                 className="text-left p-4 rounded-xl border border-white/5 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/10 hover:translate-y-[-2px] transition-all duration-300 text-neutral-400 hover:text-white group"
                                             >
                                                 <span className="text-[10px] block text-indigo-500 font-mono mb-1 uppercase tracking-wider">Execute Query</span>
@@ -190,6 +197,8 @@ export function AITerminal({
                                 <button
                                     type="submit"
                                     disabled={isLoading || !input}
+                                    onMouseEnter={() => playHover()}
+                                    onClick={() => playClick()}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-20 flex items-center justify-center transition-all duration-300 text-white shadow-[0_5_15_rgba(79,70,229,0.4)] hover:scale-105 active:scale-95"
                                 >
                                     <Send size={18} />

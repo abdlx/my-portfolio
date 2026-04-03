@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { useRef, useState } from "react";
 import GlassSurface from "../GlassSurface";
+import { useUiSounds } from "@/hooks/useUiSounds";
 
 export const FloatingDock = ({
     items,
@@ -42,6 +43,7 @@ const FloatingDockMobile = ({
     className?: string;
 }) => {
     const [open, setOpen] = useState(false);
+    const { playHover, playClick } = useUiSounds();
     return (
         <div className={cn("relative block md:hidden", className)}>
             <AnimatePresence>
@@ -106,7 +108,11 @@ const FloatingDockMobile = ({
                 )}
             </AnimatePresence>
             <button
-                onClick={() => setOpen(!open)}
+                onClick={() => {
+                    playClick();
+                    setOpen(!open);
+                }}
+                onMouseEnter={() => playHover()}
                 className="group relative"
             >
                 <GlassSurface
@@ -178,6 +184,7 @@ function IconContainer({
     active?: boolean;
     onClick?: (e: React.MouseEvent) => void;
 }) {
+    const { playHover, playClick } = useUiSounds();
     const ref = useRef<HTMLDivElement>(null);
 
     const distance = useTransform(mouseX, (val) => {
@@ -231,8 +238,14 @@ function IconContainer({
         <motion.div
             ref={ref}
             style={{ width, height }}
-            onMouseEnter={() => setHovered(true)}
+            onMouseEnter={() => {
+                setHovered(true);
+                playHover();
+            }}
             onMouseLeave={() => setHovered(false)}
+            onClick={() => {
+                if (!onClick) playClick();
+            }}
             className={wrapperClasses}
         >
             <AnimatePresence>
@@ -268,7 +281,13 @@ function IconContainer({
 
     if (onClick) {
         return (
-            <button onClick={onClick} className="focus:outline-none border-none bg-transparent p-0 m-0">
+            <button 
+                onClick={(e) => {
+                    playClick();
+                    onClick(e);
+                }} 
+                className="focus:outline-none border-none bg-transparent p-0 m-0"
+            >
                 {content}
             </button>
         );

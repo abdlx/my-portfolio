@@ -4,6 +4,7 @@ import React from "react";
 import { FileText, X, ExternalLink, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useUiSounds } from "@/hooks/useUiSounds";
 
 export function CVWindow({ 
     isOpen, 
@@ -12,6 +13,7 @@ export function CVWindow({
     isOpen: boolean; 
     setIsOpen: (open: boolean) => void 
 }) {
+    const { playHover, playClick } = useUiSounds();
     return (
         <AnimatePresence>
             {isOpen && (
@@ -38,7 +40,11 @@ export function CVWindow({
                             {/* Traffic Lights */}
                             <div className="flex gap-2 group/lights z-10">
                                 <button 
-                                    onClick={() => setIsOpen(false)}
+                                    onClick={() => {
+                                        playClick();
+                                        setIsOpen(false);
+                                    }}
+                                    onMouseEnter={() => playHover()}
                                     className="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e] flex items-center justify-center overflow-hidden"
                                 >
                                     <X className="w-2 h-2 text-black/60 opacity-0 group-hover/lights:opacity-100 transition-opacity" />
@@ -62,6 +68,8 @@ export function CVWindow({
                                 <a 
                                     href="/abdullah-cv/index.html" 
                                     target="_blank"
+                                    onMouseEnter={() => playHover()}
+                                    onClick={() => playClick()}
                                     className="text-neutral-400 hover:text-white transition-colors flex items-center gap-2 text-xs font-medium"
                                 >
                                     <ExternalLink size={14} />

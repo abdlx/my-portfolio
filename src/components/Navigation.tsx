@@ -6,9 +6,11 @@ import { Home, Terminal, FlaskConical, Mail, Cpu, Github, Linkedin, MessageSquar
 import GlassSurface from "./GlassSurface";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { AITerminal } from "./AITerminal";
-import { CVWindow } from "./CVWindow";
+import dynamic from "next/dynamic";
+const AITerminal = dynamic(() => import("./AITerminal").then(mod => mod.AITerminal), { ssr: false });
+const CVWindow = dynamic(() => import("./CVWindow").then(mod => mod.CVWindow), { ssr: false });
 import { motion, AnimatePresence } from "framer-motion";
+import { useUiSounds } from "@/hooks/useUiSounds";
 
 const IconLayoutNavbarCollapse = ({ className }: { className?: string }) => {
     return (
@@ -73,6 +75,7 @@ export function Navigation() {
     const [isTerminalOpen, setIsTerminalOpen] = useState(false);
     const [isCVOpen, setIsCVOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { playHover, playClick } = useUiSounds();
 
     useEffect(() => {
         const observerOptions = {
@@ -130,7 +133,7 @@ export function Navigation() {
     return (
         <>
             {/* Desktop Navigation & Brand */}
-            <div className="fixed top-12 left-1/2 -translate-x-1/2 z-50 hidden md:flex items-center gap-3">
+            <div className="fixed top-12 left-1/2 -translate-x-1/2 z-50 hidden md:flex items-center gap-3 will-change-transform">
                 {/* Brand Pill */}
                 <GlassSurface
                     width="auto"
@@ -167,6 +170,8 @@ export function Navigation() {
                                         ? "bg-[#818CF8]/20 text-[#818CF8] shadow-[0_0_10px_rgba(129,140,248,0.2)]"
                                         : "text-neutral-400 hover:text-white"
                                 )}
+                                onMouseEnter={() => playHover()}
+                                onClick={() => playClick()}
                             >
                                 {item.title}
                             </Link>
@@ -177,7 +182,7 @@ export function Navigation() {
 
             {/* Mobile Brand Pill */}
             <div className={cn(
-                "fixed top-8 left-6 z-50 md:hidden transition-opacity duration-300",
+                "fixed top-8 left-6 z-50 md:hidden transition-opacity duration-300 will-change-transform",
                 isMobileMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100"
             )}>
                 <GlassSurface
@@ -212,7 +217,11 @@ export function Navigation() {
                                         <Link
                                             key={item.title}
                                             href={item.href}
-                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            onMouseEnter={() => playHover()}
+                                            onClick={() => {
+                                                playClick();
+                                                setIsMobileMenuOpen(false);
+                                            }}
                                             className={cn(
                                                 "px-3 py-1 rounded-full text-[10px] font-medium tracking-wider uppercase transition-all duration-300",
                                                 activeSection === item.href
@@ -228,7 +237,11 @@ export function Navigation() {
                         </AnimatePresence>
 
                         <motion.button
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            onClick={() => {
+                                playClick();
+                                setIsMobileMenuOpen(!isMobileMenuOpen);
+                            }}
+                            onMouseEnter={() => playHover()}
                             className="relative z-[60] flex items-center justify-center h-12 w-12 rounded-full overflow-hidden"
                             whileTap={{ scale: 0.95 }}
                         >
@@ -288,9 +301,11 @@ export function Navigation() {
                                         {item.onClick ? (
                                             <button
                                                 onClick={(e) => {
+                                                    playClick();
                                                     item.onClick?.(e);
                                                     setIsMobileMenuOpen(false);
                                                 }}
+                                                onMouseEnter={() => playHover()}
                                                 className="h-10 w-10 rounded-full flex items-center justify-center bg-neutral-900/80 backdrop-blur-md border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)] active:scale-90 transition-transform"
                                             >
                                                 <div className="h-4 w-4 text-neutral-200">
@@ -300,7 +315,11 @@ export function Navigation() {
                                         ) : (
                                             <Link
                                                 href={item.href}
-                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                onMouseEnter={() => playHover()}
+                                                onClick={() => {
+                                                    playClick();
+                                                    setIsMobileMenuOpen(false);
+                                                }}
                                                 className="h-10 w-10 rounded-full flex items-center justify-center bg-neutral-900/80 backdrop-blur-md border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)] active:scale-90 transition-transform"
                                             >
                                                 <div className="h-4 w-4 text-neutral-200">

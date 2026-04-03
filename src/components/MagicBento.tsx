@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
+import { useUiSounds } from '@/hooks/useUiSounds';
 
 export interface BentoCardProps {
   color?: string;
@@ -92,6 +93,7 @@ const ParticleCard: React.FC<{
   enableMagnetism = false,
   onClick
 }) => {
+  const { playHover, playClick } = useUiSounds();
   const cardRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement[]>([]);
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -176,6 +178,7 @@ const ParticleCard: React.FC<{
 
     const handleMouseEnter = () => {
       isHoveredRef.current = true;
+      playHover();
       animateParticles();
 
       if (enableTilt) {
@@ -248,6 +251,7 @@ const ParticleCard: React.FC<{
     };
 
     const handleClick = (e: MouseEvent) => {
+      playClick();
       if (onClick) onClick();
       if (!clickEffect) return;
 

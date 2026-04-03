@@ -179,6 +179,7 @@ const GLSLHills = ({ width = '100%', height = '100%', cameraZ = 125, planeSize =
         alpha: true,
         powerPreference: 'high-performance'
       });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     } catch (e) {
       console.error('WebGL not supported:', e);
       return;
@@ -207,8 +208,23 @@ const GLSLHills = ({ width = '100%', height = '100%', cameraZ = 125, planeSize =
     };
 
     let animationId: number;
+    let isVisible = true;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
     const renderLoop = () => {
-      render();
+      if (isVisible) {
+        render();
+      }
       animationId = requestAnimationFrame(renderLoop);
     };
 
@@ -233,6 +249,7 @@ const GLSLHills = ({ width = '100%', height = '100%', cameraZ = 125, planeSize =
     return () => {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationId);
+      observer.disconnect();
       renderer.dispose();
       plane.mesh.geometry.dispose();
       (plane.mesh.material as THREE.Material).dispose();

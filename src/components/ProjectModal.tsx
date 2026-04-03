@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ExternalLink, Github, Code2, Layers, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useUiSounds } from "@/hooks/useUiSounds";
 
 interface Project {
     title: string;
@@ -21,6 +22,7 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
+    const { playHover, playClick } = useUiSounds();
     // Prevent scrolling when modal is open
     useEffect(() => {
         if (isOpen) {
@@ -58,7 +60,11 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                     >
                         {/* Close Button */}
                         <button
-                            onClick={onClose}
+                            onClick={() => {
+                                playClick();
+                                onClose();
+                            }}
+                            onMouseEnter={() => playHover()}
                             className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/50 border border-white/10 text-white hover:bg-neutral-800 transition-colors"
                         >
                             <X className="w-5 h-5" />
@@ -123,6 +129,8 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                                     href={project.liveUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
+                                                    onMouseEnter={() => playHover()}
+                                                    onClick={() => playClick()}
                                                     className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-all group"
                                                 >
                                                     <Globe className="w-4 h-4" />
@@ -135,6 +143,8 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                                     href={project.githubUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
+                                                    onMouseEnter={() => playHover()}
+                                                    onClick={() => playClick()}
                                                     className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white font-medium transition-all"
                                                 >
                                                     <Github className="w-4 h-4" />

@@ -5,8 +5,13 @@ import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { Marquee } from "@/components/ui/marquee";
 import { ColourfulText } from "@/components/ui/colourful-text";
 import { Terminal } from "lucide-react";
-import { GLSLHills } from "@/components/ui/glsl-hills";
+import dynamic from "next/dynamic";
 import { useUiSounds } from "@/hooks/useUiSounds";
+
+const GLSLHills = dynamic(() => import("@/components/ui/glsl-hills").then(mod => mod.GLSLHills), { 
+    ssr: false,
+    loading: () => <div className="absolute inset-0 bg-black" />
+});
 
 export function Hero() {
     const { playHover, playClick } = useUiSounds();
@@ -24,6 +29,8 @@ export function Hero() {
                         href="https://www.linkedin.com/in/mirza-abdullah-baig-ai-dev/"
                         target="_blank"
                         rel="noopener noreferrer"
+                        onMouseEnter={() => playHover()}
+                        onClick={() => playClick()}
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-neutral-800 bg-neutral-950/50 backdrop-blur-sm mb-8 hover:border-[#2DD4BF]/50 hover:bg-neutral-900/50 transition-all duration-300 group cursor-pointer"
                     >
                         <span className="relative flex h-2 w-2">
@@ -59,7 +66,11 @@ export function Hero() {
                     {/* CTA Buttons */}
                     <div className="mt-8 md:mt-10 flex flex-wrap justify-center gap-4 pb-20 md:pb-0">
                         <a href="#projects">
-                            <button className="group relative px-6 md:px-10 py-4 rounded-xl font-mono text-sm md:text-base text-neutral-300 hover:text-white transition-all duration-500 overflow-hidden">
+                            <button 
+                                onMouseEnter={() => playHover()}
+                                onClick={() => playClick()}
+                                className="group relative px-6 md:px-10 py-4 rounded-xl font-mono text-sm md:text-base text-neutral-300 hover:text-white transition-all duration-500 overflow-hidden"
+                            >
                                 {/* Glass Background */}
                                 <div className="absolute inset-0 bg-neutral-900/50 backdrop-blur-md border border-neutral-800 group-hover:border-neutral-600 transition-all duration-500" />
                                 {/* Shine Effect */}

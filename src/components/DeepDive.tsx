@@ -9,13 +9,13 @@ const FloatingParticles = React.memo(({ progress }: { progress: MotionValue<numb
     const shouldReduceMotion = useReducedMotion();
 
     const particles = useMemo(() =>
-        Array.from({ length: shouldReduceMotion ? 6 : 12 }, (_, i) => ({
+        Array.from({ length: shouldReduceMotion ? 6 : 10 }, (_, i) => ({
             id: i,
-            size: 3 + (i % 3),
-            x: (i * 8.3) % 100,
-            y: (i * 7.7) % 100,
-            animationDuration: 15 + (i % 3) * 5,
-            animationDelay: i * 0.5,
+            size: 2 + (i % 3),
+            x: (i * 10) % 100,
+            y: (i * 13) % 100,
+            animationDuration: 12 + (i % 3) * 4,
+            animationDelay: i * 0.4,
         })), [shouldReduceMotion]
     );
 
@@ -23,25 +23,25 @@ const FloatingParticles = React.memo(({ progress }: { progress: MotionValue<numb
         setIsMounted(true);
     }, []);
 
-    const opacity = useTransform(progress, [0, 0.3, 0.7, 1], [0.3, 0.8, 0.5, 0]);
+    const opacity = useTransform(progress, [0, 0.2, 0.5, 0.8], [0.2, 0.6, 0.4, 0]);
 
     if (!isMounted) return null;
 
     return (
         <motion.div
-            className="absolute inset-0 overflow-hidden pointer-events-none will-change-transform"
+            className="absolute inset-0 overflow-hidden pointer-events-none"
             style={{ opacity: shouldReduceMotion ? 0.3 : opacity }}
         >
             {particles.map((p) => (
                 <div
                     key={p.id}
-                    className="absolute rounded-full bg-emerald-500/30 particle-float"
+                    className="absolute rounded-full bg-emerald-500/20 particle-float"
                     style={{
                         width: p.size,
                         height: p.size,
                         left: `${p.x}%`,
                         top: `${p.y}%`,
-                        boxShadow: `0 0 ${p.size * 2}px rgba(16, 185, 129, 0.5)`,
+                        border: '1px solid rgba(16, 185, 129, 0.2)',
                         animationDuration: `${p.animationDuration}s`,
                         animationDelay: `${p.animationDelay}s`,
                         animationPlayState: shouldReduceMotion ? "paused" : "running",
@@ -118,7 +118,7 @@ const METRICS = [85, 65, 90, 45, 75];
 // Optimized Dashboard UI with minimal animations
 const DashboardUI = React.memo(() => {
     return (
-        <div className="aspect-auto md:aspect-[16/9] min-h-[400px] md:min-h-0 rounded-2xl border border-neutral-700/50 bg-gradient-to-br from-neutral-900/90 via-neutral-900/70 to-neutral-950/90 backdrop-blur-xl shadow-[0_0_120px_-20px_rgba(16,185,129,0.15),inset_0_1px_0_rgba(255,255,255,0.05)] overflow-hidden p-4 md:p-8 flex flex-col gap-6 will-change-transform">
+        <div className="aspect-auto md:aspect-[16/9] min-h-[400px] md:min-h-0 rounded-2xl border border-neutral-700/50 bg-neutral-900/90 backdrop-blur-md shadow-[0_0_80px_-20px_rgba(16,185,129,0.1),inset_0_1px_0_rgba(255,255,255,0.05)] overflow-hidden p-4 md:p-8 flex flex-col gap-6 will-change-transform">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -244,6 +244,7 @@ const DashboardUI = React.memo(() => {
                 .bar-animate {
                     animation: bar-animate 0.8s ease-out forwards;
                     transform-origin: bottom;
+                    will-change: transform;
                 }
                 @keyframes stat-card {
                     from { opacity: 0; transform: translateY(20px); }
@@ -252,6 +253,7 @@ const DashboardUI = React.memo(() => {
                 .stat-card {
                     animation: stat-card 0.5s ease-out forwards;
                     opacity: 0;
+                    will-change: transform, opacity;
                 }
                 @keyframes progress-bar {
                     from { width: 0; }
@@ -283,40 +285,42 @@ export function DeepDive() {
         offset: ["start start", "end end"],
     });
 
-    // Simplified transforms - removed blur (expensive) and reduced complexity
-    const dashboardScale = useTransform(scrollYProgress, [0, 0.3, 0.55], [1, 2.5, 10]);
-    const dashboardOpacity = useTransform(scrollYProgress, [0, 0.35, 0.5], [1, 1, 0]);
+    // Optimized transforms - snappier and less extreme
+    const dashboardScale = useTransform(scrollYProgress, [0, 0.15, 0.35], [1, 1.2, 2.5]);
+    const dashboardOpacity = useTransform(scrollYProgress, [0.2, 0.35], [1, 0]);
+    const dashboardY = useTransform(scrollYProgress, [0, 0.35], [0, -50]);
 
-    // Code panel transformations
-    const codeScale = useTransform(scrollYProgress, [0.4, 0.7], [0.95, 1]);
-    const codeOpacity = useTransform(scrollYProgress, [0.4, 0.6], [0, 1]);
-    const codeY = useTransform(scrollYProgress, [0.4, 0.7], [30, 0]);
+    // Code panel transformations - appear slightly earlier and faster
+    const codeScale = useTransform(scrollYProgress, [0.25, 0.45], [0.9, 1]);
+    const codeOpacity = useTransform(scrollYProgress, [0.25, 0.4], [0, 1]);
+    const codeY = useTransform(scrollYProgress, [0.25, 0.45], [40, 0]);
 
     // Text animations
-    const introOpacity = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 1, 0]);
-    const introY = useTransform(scrollYProgress, [0, 0.25], [0, -30]);
+    const introOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
+    const introY = useTransform(scrollYProgress, [0, 0.1], [0, -20]);
 
-    const headingOpacity = useTransform(scrollYProgress, [0.5, 0.65], [0, 1]);
-    const headingY = useTransform(scrollYProgress, [0.5, 0.7], [20, 0]);
+    const headingOpacity = useTransform(scrollYProgress, [0.35, 0.5], [0, 1]);
+    const headingY = useTransform(scrollYProgress, [0.35, 0.5], [30, 0]);
 
-    const subheadingOpacity = useTransform(scrollYProgress, [0.6, 0.75], [0, 1]);
+    const subheadingOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0, 1]);
 
     // Progress indicator
     const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
     // Background effects
-    const gridOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.15, 0.25, 0.1]);
-    const glowOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.3, 0.8, 0.4]);
+    const gridOpacity = useTransform(scrollYProgress, [0, 0.4, 0.8], [0.1, 0.2, 0.1]);
+    const glowOpacity = useTransform(scrollYProgress, [0, 0.4, 0.8], [0.2, 0.6, 0.3]);
 
-    // Track when code should be visible
+    // Track when code should be visible - use a more efficient threshold
     useEffect(() => {
         return scrollYProgress.on("change", (latest) => {
-            setCodeVisible(latest > 0.35);
+            if (latest > 0.25 && !codeVisible) setCodeVisible(true);
+            if (latest < 0.2 && codeVisible) setCodeVisible(false);
         });
-    }, [scrollYProgress]);
+    }, [scrollYProgress, codeVisible]);
 
     return (
-        <section ref={containerRef} className="h-[400vh] bg-black relative">
+        <section ref={containerRef} className="h-[250vh] bg-black relative">
             {/* Global CSS animations */}
             <style jsx global>{`
                 @keyframes cursor-blink {
@@ -334,11 +338,12 @@ export function DeepDive() {
                     animation: scroll-indicator 1.5s ease-in-out infinite;
                 }
                 @keyframes scan-line {
-                    0% { top: -15%; }
-                    100% { top: 115%; }
+                    0% { transform: translateY(-100%); }
+                    100% { transform: translateY(100vh); }
                 }
                 .scan-line {
-                    animation: scan-line 5s ease-in-out infinite;
+                    animation: scan-line 4s linear infinite;
+                    will-change: transform;
                 }
             `}</style>
 
@@ -390,6 +395,7 @@ export function DeepDive() {
                     style={{
                         scale: dashboardScale,
                         opacity: dashboardOpacity,
+                        y: dashboardY,
                     }}
                     className="relative z-20 w-full max-w-5xl px-4 pointer-events-none will-change-transform"
                 >
@@ -561,7 +567,7 @@ export function DeepDive() {
                         />
 
                         {/* Animated scan line - CSS animation */}
-                        <div className="absolute left-0 right-0 h-16 bg-gradient-to-b from-transparent via-emerald-500/5 to-transparent pointer-events-none scan-line" />
+                        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent via-emerald-500/10 to-transparent pointer-events-none scan-line" />
 
                         {/* Corner decorations - static */}
                         <div className="absolute top-0 left-0 w-8 h-8 border-l-2 border-t-2 border-emerald-500/30 rounded-tl-lg" />
