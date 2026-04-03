@@ -16,7 +16,23 @@ export function AITerminal({
 }) {
     console.log("AITerminal isOpen:", isOpen);
     const { playHover, playClick, playNotify } = useUiSounds();
-    const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat() as any;
+    const [input, setInput] = useState("");
+    const { messages, sendMessage, status, stop } = useChat() as any;
+    const isLoading = status === 'streaming' || status === 'submitting';
+    const handleSubmit = async (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
+        if (!input || isLoading) return;
+        
+        // Vercel AI SDK 4+ sendMessage handles the user message
+        const currentInput = input;
+        setInput(""); // Promptly clear input for better UX
+        try {
+            await sendMessage({ role: 'user', content: currentInput });
+        } catch (err) {
+            console.error("Failed to send message:", err);
+            setInput(currentInput); // Restore on failure
+        }
+    };
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -105,8 +121,7 @@ export function AITerminal({
                                             <button
                                                 key={s}
                                                 onClick={() => {
-                                                    const e = { target: { value: s } } as any;
-                                                    handleInputChange(e);
+                                                    setInput(s);
                                                 }}
                                                 className="text-left p-4 rounded-xl border border-white/5 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/10 hover:translate-y-[-2px] transition-all duration-300 text-neutral-400 hover:text-white group"
                                             >
@@ -163,7 +178,7 @@ export function AITerminal({
                                 </div>
                                 <input
                                     value={input}
-                                    onChange={handleInputChange}
+                                    onChange={(e) => setInput(e.target.value)}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter' && !e.shiftKey) {
                                             // Handled by form onSubmit

@@ -19,7 +19,7 @@ const internalItems = [
         href: "#projects",
     },
     {
-        title: "The Stack",
+        title: "Stack",
         href: "#knowledge-graph",
     },
     {
