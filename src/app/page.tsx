@@ -12,7 +12,9 @@ const Navigation = dynamic(() => import("@/components/Navigation").then(mod => m
 const Metrics = dynamic(() => import("@/components/Metrics").then(mod => mod.Metrics), { ssr: false });
 const Testimonials = dynamic(() => import("@/components/Testimonials").then(mod => mod.Testimonials), { ssr: false });
 const KnowledgeGraph = dynamic(() => import("@/components/KnowledgeGraph").then(mod => mod.KnowledgeGraph), { ssr: false });
+const CV = dynamic(() => import("@/components/CV").then(mod => mod.CV), { ssr: false });
 const Contact = dynamic(() => import("@/components/Contact").then(mod => mod.Contact), { ssr: false });
+const AITerminal = dynamic(() => import("@/components/AITerminal").then(mod => mod.AITerminal), { ssr: false });
 const TracingBeam = dynamic(() => import("@/components/ui/tracing-beam").then(mod => mod.TracingBeam), { ssr: false });
 
 export default function Home() {
@@ -42,7 +44,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto text-center font-mono">
           <div className="mb-4">
             <a
-              href="mailto:abdullah@example.com"
+              href="mailto:mirzaabdulla300@gmail.com"
               className="text-emerald-500 hover:text-emerald-400 transition-colors inline-flex items-center gap-2"
             >
               <span className="text-neutral-500">$</span> ./contact_me.sh

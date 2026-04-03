@@ -1,24 +1,30 @@
 "use client";
 import React from "react";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
-import { ShimmerButton } from "@/components/ui/shimmer-button";
+
 import { Marquee } from "@/components/ui/marquee";
 import { BackgroundLines } from "@/components/ui/background-lines";
 import { ColourfulText } from "@/components/ui/colourful-text";
 import { cn } from "@/lib/utils";
+import { FileText, Terminal } from "lucide-react";
+import { BackgroundParticles } from "@/components/ui/background-particles";
+import { useUiSounds } from "@/hooks/useUiSounds";
 
 export function Hero() {
+    const { playHover, playClick } = useUiSounds();
+
     return (
         <section
             id="home"
             className="relative min-h-[100svh] w-full bg-black antialiased flex flex-col justify-center"
         >
+            <BackgroundParticles />
             <BackgroundLines className="flex items-center justify-center w-full flex-col px-4 py-20 md:py-0">
                 <div className="p-4 max-w-7xl mx-auto relative z-10 w-full text-center">
                     {/* Status Badge */}
-                    <a 
-                        href="https://www.linkedin.com/in/mirza-abdullah-baig-ai-dev/" 
-                        target="_blank" 
+                    <a
+                        href="https://www.linkedin.com/in/mirza-abdullah-baig-ai-dev/"
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-neutral-800 bg-neutral-950/50 backdrop-blur-sm mb-8 hover:border-emerald-500/50 hover:bg-neutral-900/50 transition-all duration-300 group cursor-pointer"
                     >
@@ -52,17 +58,20 @@ export function Hero() {
                         connecting advanced AI models with intuitive, high-performance interfaces.
                     </p>
 
-                    {/* CTA Button */}
-                    <div className="mt-8 md:mt-10 flex justify-center pb-20 md:pb-0">
+                    {/* CTA Buttons */}
+                    <div className="mt-8 md:mt-10 flex flex-wrap justify-center gap-4 pb-20 md:pb-0">
                         <a href="#projects">
-                            <ShimmerButton
-                                shimmerColor="#ffffff"
-                                background="rgba(99, 102, 241, 0.9)"
-                                borderRadius="12px"
-                                className="font-mono text-sm md:text-base"
-                            >
-                                Explore the Architecture
-                            </ShimmerButton>
+                            <button className="group relative px-6 md:px-10 py-4 rounded-xl font-mono text-sm md:text-base text-neutral-300 hover:text-white transition-all duration-500 overflow-hidden">
+                                {/* Glass Background */}
+                                <div className="absolute inset-0 bg-neutral-900/50 backdrop-blur-md border border-neutral-800 group-hover:border-neutral-600 transition-all duration-500" />
+                                {/* Shine Effect */}
+                                <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+
+                                <span className="relative flex items-center gap-2">
+                                    <Terminal size={18} className="text-emerald-500 group-hover:rotate-12 transition-transform duration-300" />
+                                    Explore the Architecture
+                                </span>
+                            </button>
                         </a>
                     </div>
                 </div>

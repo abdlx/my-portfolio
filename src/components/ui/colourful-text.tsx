@@ -18,8 +18,10 @@ export function ColourfulText({ text }: { text: string }) {
 
     const [currentColors, setCurrentColors] = React.useState(colors);
     const [count, setCount] = React.useState(0);
+    const [isMounted, setIsMounted] = React.useState(false);
 
     React.useEffect(() => {
+        setIsMounted(true);
         const interval = setInterval(() => {
             const shuffled = [...colors].sort(() => Math.random() - 0.5);
             setCurrentColors(shuffled);
@@ -27,6 +29,14 @@ export function ColourfulText({ text }: { text: string }) {
         }, 5000);
         return () => clearInterval(interval);
     }, []);
+
+    if (!isMounted) {
+        return text.split("").map((char, index) => (
+            <span key={`${char}-${index}`} className="inline-block whitespace-pre font-sans tracking-tight">
+                {char}
+            </span>
+        ));
+    }
 
     return text.split("").map((char, index) => (
         <motion.span

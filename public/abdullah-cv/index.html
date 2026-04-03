@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Abdullah – CV</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=DM+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #ffffff;
+            color: #0a0a0a;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 15px;
+            line-height: 1.65;
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 60px 56px;
+        }
+
+        /* ─── HEADER ─── */
+        header {
+            border-bottom: 2px solid #0a0a0a;
+            padding-bottom: 20px;
+            margin-bottom: 28px;
+        }
+
+        .name {
+            font-size: 38px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+            margin-bottom: 6px;
+        }
+
+        .title-tag {
+            font-family: 'DM Mono', monospace;
+            font-size: 11.5px;
+            font-weight: 400;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #444;
+            margin-bottom: 14px;
+        }
+
+        .contact-row {
+            font-family: 'DM Mono', monospace;
+            font-size: 11.5px;
+            color: #222;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 20px;
+        }
+
+        .contact-row a {
+            color: #0a0a0a;
+            text-decoration: none;
+        }
+
+        .contact-row a:hover {
+            text-decoration: underline;
+        }
+
+        /* ─── SECTIONS ─── */
+        section {
+            margin-bottom: 30px;
+        }
+
+        .section-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #888;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 16px;
+        }
+
+        /* ─── SUMMARY ─── */
+        .summary p {
+            font-size: 15px;
+            color: #1a1a1a;
+            line-height: 1.75;
+        }
+
+        /* ─── EXPERIENCE ─── */
+        .entry {
+            margin-bottom: 22px;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .entry-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .entry-org {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: #555;
+            margin-top: 1px;
+            margin-bottom: 6px;
+        }
+
+        .entry-date {
+            font-family: 'DM Mono', monospace;
+            font-size: 10.5px;
+            color: #888;
+            white-space: nowrap;
+        }
+
+        .entry ul {
+            padding-left: 16px;
+            color: #1a1a1a;
+        }
+
+        .entry ul li {
+            margin-bottom: 4px;
+        }
+
+        /* ─── SKILLS ─── */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 40px;
+        }
+
+        .skill-group {}
+
+        .skill-group-name {
+            font-family: 'DM Mono', monospace;
+            font-size: 10.5px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .skill-group p {
+            font-size: 14px;
+            color: #222;
+            line-height: 1.5;
+        }
+
+        /* ─── SERVICES ─── */
+        .services-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 40px;
+        }
+
+        .service-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .service-name {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+
+        .service-desc {
+            font-size: 13px;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        /* ─── PROJECTS ─── */
+        .project-entry {
+            margin-bottom: 18px;
+        }
+
+        .project-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .project-stack {
+            font-family: 'DM Mono', monospace;
+            font-size: 10.5px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .project-desc {
+            font-size: 14px;
+            color: #1a1a1a;
+            line-height: 1.65;
+        }
+
+        /* ─── PAGE BREAK CONTROL ─── */
+        .entry,
+        .project-entry,
+        .skill-group,
+        .service-item {
+            page-break-inside: avoid;
+        }
+
+        .section-label,
+        h1,
+        h2,
+        h3 {
+            page-break-after: avoid;
+        }
+
+        /* ─── PRINT ─── */
+        @media print {
+            body {
+                padding: 40px 48px;
+                font-size: 13px;
+                background: white !important;
+            }
+
+            .name {
+                font-size: 30px;
+            }
+
+            .download-btn {
+                display: none !important;
+            }
+
+            /* Keep links blue/underlined in PDF if desired, or keep them black for professional print */
+            a {
+                color: #0a0a0a !important;
+                text-decoration: none;
+            }
+        }
+
+        /* ─── DOWNLOAD BUTTON ─── */
+        .download-btn {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: #0a0a0a;
+            color: #ffffff;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border: none;
+            padding: 12px 22px;
+            cursor: pointer;
+            z-index: 999;
+            transition: background 0.2s;
+        }
+
+        .download-btn:hover {
+            background: #333;
+        }
+
+        .download-btn:disabled {
+            background: #888;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cv-content">
+        <header>
+            <!-- TIP: Change your name here -->
+            <div class="name" id="userName">Abdullah</div>
+            <div class="title-tag">Full-Stack Developer &amp; AI Engineer &nbsp;·&nbsp; Entrepreneur</div>
+            <div class="contact-row">
+                <span>Karachi, Pakistan</span>
+                <a href="https://abdullah-ai-engineer.vercel.app" target="_blank">abdullah-ai-engineer.vercel.app</a>
+                <span>Available for freelance &amp; contract work</span>
+            </div>
+        </header>
+
+        <!-- SUMMARY -->
+        <section class="summary">
+            <div class="section-label">Profile</div>
+            <p>
+                Full-stack developer and AI engineer with hands-on experience building SaaS products, automation
+                pipelines, and AI-integrated systems.
+                Founder of multiple digital ventures across e-commerce, lead generation, and conversational AI.
+                Comfortable across the full product lifecycle — from database schema and API design to deployment,
+                scraping infrastructure, and client-facing UI.
+                Based in Pakistan, working with modern tools like Next.js, Supabase, Node.js, and Python.
+            </p>
+        </section>
+
+        <!-- SKILLS -->
+        <section>
+            <div class="section-label">Technical Skills</div>
+            <div class="skills-grid">
+                <div class="skill-group">
+                    <div class="skill-group-name">Languages</div>
+                    <p>JavaScript, TypeScript, Python, SQL</p>
+                </div>
+                <div class="skill-group">
+                    <div class="skill-group-name">Frontend</div>
+                    <p>Next.js, React, Tailwind CSS, HTML/CSS</p>
+                </div>
+                <div class="skill-group">
+                    <div class="skill-group-name">Backend &amp; Database</div>
+                    <p>Node.js, Supabase, PostgreSQL, REST APIs</p>
+                </div>
+                <div class="skill-group">
+                    <div class="skill-group-name">AI &amp; Automation</div>
+                    <p>LLM integration, AI voice agents, prompt engineering, local model deployment</p>
+                </div>
+                <div class="skill-group">
+                    <div class="skill-group-name">Data &amp; Scraping</div>
+                    <p>BeautifulSoup, Selenium, Playwright, data pipelines, lead extraction</p>
+                </div>
+                <div class="skill-group">
+                    <div class="skill-group-name">Infrastructure &amp; Tools</div>
+                    <p>Vercel, Cursor, Git, HP Z800 workstation, local AI server setup</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS / EXPERIENCE -->
+        <section>
+            <div class="section-label">Projects &amp; Ventures</div>
+
+            <div class="project-entry">
+                <div class="project-name">Fulfix &nbsp;<span
+                        style="font-weight:400;font-size:13px;color:#666;">(formerly PakkaCOD)</span></div>
+                <div class="project-stack">Next.js · Node.js · Supabase · AI Voice · SaaS</div>
+                <div class="project-desc">
+                    Automated order confirmation SaaS platform for e-commerce businesses. Fulfix calls and messages
+                    customers via AI voice agents to confirm Cash-on-Delivery (COD) orders, reducing return rates and
+                    improving delivery success. Built end-to-end: backend logic, Supabase database, API integrations,
+                    and dashboard UI.
+                </div>
+            </div>
+
+            <div class="project-entry">
+                <div class="project-name">EchoHarvest</div>
+                <div class="project-stack">Python · BeautifulSoup · Selenium · Lead Generation</div>
+                <div class="project-desc">
+                    Python-based lead generation scraping tool. Automates discovery and extraction of business contact
+                    data from web sources, structured for outreach and CRM pipeline use.
+                </div>
+            </div>
+
+            <div class="project-entry">
+                <div class="project-name">ASAS Forge</div>
+                <div class="project-stack">E-commerce · Web Design · Ad Creative</div>
+                <div class="project-desc">
+                    Managed web presence, product photography direction, and ad creative strategy for an
+                    industrial/hardware e-commerce brand operating in the Pakistani market.
+                </div>
+            </div>
+
+        </section>
+
+        <!-- SERVICES -->
+        <section>
+            <div class="section-label">Services</div>
+            <div class="services-list">
+                <div class="service-item">
+                    <div class="service-name">Full-Stack Web Development</div>
+                    <div class="service-desc">End-to-end web apps using Next.js, Node.js, and Supabase with clean
+                        architecture and fast delivery.</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-name">AI Integration &amp; Automation</div>
+                    <div class="service-desc">LLM-powered features, AI voice agents, and intelligent automation
+                        pipelines for business workflows.</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-name">Web Scraping &amp; Data Extraction</div>
+                    <div class="service-desc">Custom Python scrapers using BeautifulSoup, Selenium, and Playwright for
+                        lead gen and data pipelines.</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-name">SaaS Product Development</div>
+                    <div class="service-desc">From idea to launch — database design, API layer, auth, billing
+                        integration, and dashboard UI.</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-name">E-commerce Tooling</div>
+                    <div class="service-desc">Order management automation, COD confirmation systems, and operational
+                        SaaS for online stores.</div>
+                </div>
+                <div class="service-item">
+                    <div class="service-name">Branding &amp; UI/UX Design</div>
+                    <div class="service-desc">Digital identity, interface design, and ad creative for startups and
+                        product-focused businesses.</div>
+                </div>
+            </div>
+            <div class="project-entry">
+                <div class="project-name">Ongoing Projects</div>
+                <div class="project-stack">Various Stacks · Active Development</div>
+                <div class="project-desc">
+                    Currently working on multiple projects across different domains including SaaS tooling, AI-powered
+                    applications, and e-commerce automation. Details available on request.
+                </div>
+            </div>
+
+        </section>
+
+        <!-- EDUCATION -->
+        <section>
+            <div class="section-label">Education &amp; Certifications</div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">Diploma in Software Engineering</div>
+                    <div class="entry-date">In Progress</div>
+                </div>
+                <div class="entry-org">Aptech Computer Education · Pakistan</div>
+                <ul>
+                    <li>Pursuing a structured software engineering program covering core CS fundamentals and applied
+                        development.</li>
+                </ul>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">Certificate in Digital Marketing</div>
+                    <div class="entry-date">Completed</div>
+                </div>
+                <div class="entry-org">Aptech Computer Education · Pakistan</div>
+                <ul>
+                    <li>Covers SEO, social media strategy, paid advertising, content marketing, and campaign analytics.
+                    </li>
+                    <li>Applied directly in managing ad creative and digital presence for ASAS Forge and Vexel Studio.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="entry">
+                <div class="entry-header">
+                    <div class="entry-title">Self-Directed Learning &amp; Independent Projects</div>
+                    <div class="entry-date">Ongoing</div>
+                </div>
+                <div class="entry-org">Independent</div>
+                <ul>
+                    <li>Built and shipped multiple production-grade SaaS products, AI systems, and scraping tools
+                        independently.</li>
+                    <li>Operates local AI model infrastructure on HP Z800 workstation and home server mini PCs.</li>
+                </ul>
+            </div>
+        </section>
+
+    </div><!-- end cv-content -->
+
+    <button class="download-btn" id="downloadBtn" onclick="downloadPDF()">⬇ Download PDF</button>
+
+    <script>
+        /**
+         * PDF Generation Logic
+         * Uses html2pdf.js to convert the 'cv-content' div into a high-quality PDF.
+         */
+        function downloadPDF() {
+            const btn = document.getElementById('downloadBtn');
+            const userName = document.getElementById('userName').textContent.trim();
+
+            // Update button state
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
+
+            const element = document.getElementById('cv-content');
+
+            const opt = {
+                margin: [12, 14, 12, 14], // [top, right, bottom, left] in mm
+                filename: `${userName.replace(/\s+/g, '-')}-CV.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 3, // High resolution for professional printing
+                    useCORS: true,
+                    letterRendering: true,
+                    scrollY: 0
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'portrait'
+                },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            // Execute generation
+            html2pdf()
+                .set(opt)
+                .from(element)
+                .save()
+                .then(() => {
+                    // Restore button state
+                    btn.disabled = false;
+                    btn.textContent = '⬇ Download PDF';
+                })
+                .catch(err => {
+                    console.error('PDF Generation Error:', err);
+                    btn.disabled = false;
+                    btn.textContent = '❌ Error';
+                    setTimeout(() => {
+                        btn.textContent = '⬇ Download PDF';
+                    }, 2000);
+                });
+        }
+    </script>
+
+</body>
+
+</html>

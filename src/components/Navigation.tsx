@@ -1,30 +1,34 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { FloatingDock } from "@/components/ui/floating-dock";
-import { Home, Terminal, FlaskConical, Mail, Cpu, Github, Linkedin, MessageSquare } from "lucide-react";
+import { Home, Terminal, FlaskConical, Mail, Cpu, Github, Linkedin, MessageSquare, FileText, Bot } from "lucide-react";
+import GlassSurface from "./GlassSurface";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { AITerminal } from "./AITerminal";
+import { CVWindow } from "./CVWindow";
 
-const navItems = [
+const internalItems = [
     {
         title: "Home",
-        icon: <Home className="h-full w-full" />,
         href: "#home",
     },
     {
         title: "Systems",
-        icon: <Terminal className="h-full w-full" />,
         href: "#projects",
     },
     {
-        title: "The Arsenal",
-        icon: <Cpu className="h-full w-full" />,
+        title: "The Stack",
         href: "#knowledge-graph",
     },
     {
         title: "Lab",
-        icon: <FlaskConical className="h-full w-full" />,
         href: "#lab",
     },
+];
+
+const externalItems = [
     {
         title: "GitHub",
         icon: <Github className="h-full w-full" />,
@@ -44,11 +48,13 @@ const navItems = [
 
 export function Navigation() {
     const [activeSection, setActiveSection] = useState("#home");
+    const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+    const [isCVOpen, setIsCVOpen] = useState(false);
 
     useEffect(() => {
         const observerOptions = {
             root: null,
-            rootMargin: "-25% 0px -65% 0px", // Focus on the upper-middle of the screen
+            rootMargin: "-25% 0px -65% 0px",
             threshold: 0,
         };
 
@@ -62,22 +68,84 @@ export function Navigation() {
 
         const observer = new IntersectionObserver(handleIntersect, observerOptions);
 
-        // Define sections to observe from internal links
-        const targetIds = navItems
-            .map(item => item.href)
-            .filter(href => href.startsWith("#"));
-
-        targetIds.forEach((id) => {
-            const element = document.querySelector(id);
+        internalItems.forEach((item) => {
+            const element = document.querySelector(item.href);
             if (element) observer.observe(element);
         });
 
         return () => observer.disconnect();
     }, []);
 
+    const toggleTerminal = (e: React.MouseEvent) => {
+        console.log("Toggle Terminal Clicked!");
+        e.preventDefault();
+        setIsTerminalOpen(prev => !prev);
+    };
+
+    const toggleCV = (e: React.MouseEvent) => {
+        console.log("Toggle CV Clicked!");
+        e.preventDefault();
+        setIsCVOpen(prev => !prev);
+    };
+
+    const dockItems = useMemo(() => [
+        ...externalItems,
+        {
+            title: "Curriculum Vitae",
+            icon: <FileText className="h-full w-full" />,
+            href: "#",
+            onClick: toggleCV
+        },
+        {
+            title: "AI Clone",
+            icon: <Bot className="h-full w-full" />,
+            href: "#",
+            onClick: toggleTerminal
+        }
+    ], [isTerminalOpen, isCVOpen]);
+
     return (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
-            <FloatingDock items={navItems} activeHref={activeSection} />
-        </div>
+        <>
+            {/* Top Glass Navbar */}
+            <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50">
+                <GlassSurface
+                    width="auto"
+                    height={46}
+                    borderRadius={23}
+                    className="flex items-center px-2"
+                    brightness={15}
+                    opacity={0.8}
+                    backgroundOpacity={0.4}
+                >
+                    <div className="flex items-center gap-1">
+                        {internalItems.map((item) => (
+                            <Link
+                                key={item.title}
+                                href={item.href}
+                                className={cn(
+                                    "px-4 py-1.5 rounded-full text-xs font-medium tracking-wider uppercase transition-all duration-300",
+                                    activeSection === item.href
+                                        ? "bg-indigo-500/20 text-indigo-400 shadow-[0_0_10px_rgba(99,102,241,0.2)]"
+                                        : "text-neutral-400 hover:text-white"
+                                )}
+                            >
+                                {item.title}
+                            </Link>
+                        ))}
+                    </div>
+                </GlassSurface>
+            </div>
+
+            {/* AI Terminal Window */}
+            <AITerminal isOpen={isTerminalOpen} setIsOpen={setIsTerminalOpen} />
+
+            {/* CV Preview Window */}
+            <CVWindow isOpen={isCVOpen} setIsOpen={setIsCVOpen} />
+
+            {/* Bottom External Dock */}
+            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+                <FloatingDock items={dockItems} />
+            </div>
+        </>
     );
 }

@@ -13,7 +13,7 @@ export function Contact() {
                     </h2>
 
                     <div className="flex justify-center">
-                        <a href="mailto:abdullah@example.com">
+                        <a href="mailto:mirzaabdulla300@gmail.com">
                             <ShimmerButton
                                 shimmerColor="#ffffff"
                                 background="rgba(99, 102, 241, 0.9)"

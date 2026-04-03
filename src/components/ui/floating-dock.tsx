@@ -11,6 +11,7 @@ import {
 } from "framer-motion";
 import Link from "next/link";
 import { useRef, useState } from "react";
+import GlassSurface from "../GlassSurface";
 
 export const FloatingDock = ({
     items,
@@ -18,7 +19,7 @@ export const FloatingDock = ({
     desktopClassName,
     mobileClassName,
 }: {
-    items: { title: string; icon: React.ReactNode; href: string }[];
+    items: { title: string; icon: React.ReactNode; href: string; onClick?: (e: React.MouseEvent) => void }[];
     activeHref?: string;
     desktopClassName?: string;
     mobileClassName?: string;
@@ -36,7 +37,7 @@ const FloatingDockMobile = ({
     activeHref,
     className,
 }: {
-    items: { title: string; icon: React.ReactNode; href: string }[];
+    items: { title: string; icon: React.ReactNode; href: string; onClick?: (e: React.MouseEvent) => void }[];
     activeHref?: string;
     className?: string;
 }) => {
@@ -66,20 +67,39 @@ const FloatingDockMobile = ({
                                 }}
                                 transition={{ delay: (items.length - 1 - idx) * 0.05 }}
                             >
-                                <Link
-                                    href={item.href}
-                                    key={item.title}
-                                    className={cn(
-                                        "h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-200",
-                                        activeHref === item.href
-                                            ? "bg-emerald-500/20 border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.3)]"
-                                            : "bg-neutral-900/80 backdrop-blur-md border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
-                                    )}
-                                >
-                                    <div className={cn("h-4 w-4 transition-colors duration-300", activeHref === item.href ? "text-emerald-400" : "text-neutral-200")}>
-                                        {item.icon}
-                                    </div>
-                                </Link>
+                                {item.onClick ? (
+                                    <button
+                                        onClick={(e) => {
+                                            item.onClick?.(e);
+                                            setOpen(false);
+                                        }}
+                                        className={cn(
+                                            "h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-200",
+                                            activeHref === item.href
+                                                ? "bg-emerald-500/20 border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+                                                : "bg-neutral-900/80 backdrop-blur-md border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+                                        )}
+                                    >
+                                        <div className={cn("h-4 w-4 transition-colors duration-300", activeHref === item.href ? "text-emerald-400" : "text-neutral-200")}>
+                                            {item.icon}
+                                        </div>
+                                    </button>
+                                ) : (
+                                    <Link
+                                        href={item.href}
+                                        key={item.title}
+                                        className={cn(
+                                            "h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-200",
+                                            activeHref === item.href
+                                                ? "bg-emerald-500/20 border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+                                                : "bg-neutral-900/80 backdrop-blur-md border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+                                        )}
+                                    >
+                                        <div className={cn("h-4 w-4 transition-colors duration-300", activeHref === item.href ? "text-emerald-400" : "text-neutral-200")}>
+                                            {item.icon}
+                                        </div>
+                                    </Link>
+                                )}
                             </motion.div>
                         ))}
                     </motion.div>
@@ -87,9 +107,19 @@ const FloatingDockMobile = ({
             </AnimatePresence>
             <button
                 onClick={() => setOpen(!open)}
-                className="h-12 w-12 rounded-full bg-black/40 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.8),0_0_15px_rgba(99,102,241,0.15)] flex items-center justify-center"
+                className="group relative"
             >
-                <IconLayoutNavbarCollapse className="h-6 w-6 text-neutral-300" />
+                <GlassSurface
+                    width={48}
+                    height={48}
+                    borderRadius={24}
+                    className="flex items-center justify-center p-0"
+                    brightness={15}
+                    opacity={0.8}
+                    backgroundOpacity={0.2}
+                >
+                    <IconLayoutNavbarCollapse className="h-6 w-6 text-neutral-300" />
+                </GlassSurface>
             </button>
         </div>
     );
@@ -100,29 +130,36 @@ const FloatingDockDesktop = ({
     activeHref,
     className,
 }: {
-    items: { title: string; icon: React.ReactNode; href: string }[];
+    items: { title: string; icon: React.ReactNode; href: string; onClick?: (e: React.MouseEvent) => void }[];
     activeHref?: string;
     className?: string;
 }) => {
     const mouseX = useMotionValue(Infinity);
     return (
-        <motion.div
-            onMouseMove={(e) => mouseX.set(e.pageX)}
-            onMouseLeave={() => mouseX.set(Infinity)}
-            className={cn(
-                "mx-auto hidden md:flex h-16 gap-4 items-end rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.8),0_0_15px_rgba(99,102,241,0.15)] px-4 pb-3",
-                className
-            )}
+        <GlassSurface
+            width="fit-content"
+            height={64}
+            borderRadius={16}
+            className={cn("mx-auto hidden md:flex p-0", className)}
+            brightness={15}
+            opacity={0.8}
+            backgroundOpacity={0.2}
         >
-            {items.map((item) => (
-                <IconContainer
-                    mouseX={mouseX}
-                    key={item.title}
-                    active={activeHref === item.href}
-                    {...item}
-                />
-            ))}
-        </motion.div>
+            <motion.div
+                onMouseMove={(e) => mouseX.set(e.pageX)}
+                onMouseLeave={() => mouseX.set(Infinity)}
+                className="flex items-end gap-4 px-4 pb-3 h-full overflow-visible"
+            >
+                {items.map((item) => (
+                    <IconContainer
+                        mouseX={mouseX}
+                        key={item.title}
+                        active={activeHref === item.href}
+                        {...item}
+                    />
+                ))}
+            </motion.div>
+        </GlassSurface>
     );
 };
 
@@ -132,12 +169,14 @@ function IconContainer({
     icon,
     href,
     active,
+    onClick,
 }: {
     mouseX: MotionValue;
     title: string;
     icon: React.ReactNode;
     href: string;
     active?: boolean;
+    onClick?: (e: React.MouseEvent) => void;
 }) {
     const ref = useRef<HTMLDivElement>(null);
 
@@ -181,49 +220,63 @@ function IconContainer({
 
     const [hovered, setHovered] = useState(false);
 
-    return (
-        <Link href={href}>
+    const wrapperClasses = cn(
+        "aspect-square rounded-full border flex items-center justify-center relative shadow-inner overflow-visible",
+        active
+            ? "bg-gradient-to-b from-emerald-500/10 to-emerald-950/20 border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+            : "bg-gradient-to-b from-neutral-800/50 to-neutral-950/50 border-white/5 shadow-black/50"
+    );
+
+    const content = (
+        <motion.div
+            ref={ref}
+            style={{ width, height }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            className={wrapperClasses}
+        >
+            <AnimatePresence>
+                {hovered && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 10, x: "-50%" }}
+                        animate={{ opacity: 1, y: 0, x: "-50%" }}
+                        exit={{ opacity: 0, y: 2, x: "-50%" }}
+                        className="px-2 py-0.5 whitespace-pre rounded-md bg-neutral-900/90 backdrop-blur-md border border-white/10 text-white absolute left-1/2 -translate-x-1/2 -top-10 w-fit text-[10px] uppercase tracking-widest font-bold shadow-xl"
+                    >
+                        {title}
+                    </motion.div>
+                )}
+            </AnimatePresence>
             <motion.div
-                ref={ref}
-                style={{ width, height }}
-                onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => setHovered(false)}
+                style={{ width: widthIcon, height: heightIcon }}
                 className={cn(
-                    "aspect-square rounded-full border flex items-center justify-center relative shadow-inner",
-                    active
-                        ? "bg-gradient-to-b from-emerald-500/10 to-emerald-950/20 border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
-                        : "bg-gradient-to-b from-neutral-800/50 to-neutral-950/50 border-white/5 shadow-black/50"
+                    "flex items-center justify-center transition-colors duration-300",
+                    active ? "text-emerald-400" : "text-neutral-200"
                 )}
             >
-                <AnimatePresence>
-                    {hovered && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 10, x: "-50%" }}
-                            animate={{ opacity: 1, y: 0, x: "-50%" }}
-                            exit={{ opacity: 0, y: 2, x: "-50%" }}
-                            className="px-2 py-0.5 whitespace-pre rounded-md bg-neutral-900/90 backdrop-blur-md border border-white/10 text-white absolute left-1/2 -translate-x-1/2 -top-10 w-fit text-[10px] uppercase tracking-widest font-bold shadow-xl"
-                        >
-                            {title}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-                <motion.div
-                    style={{ width: widthIcon, height: heightIcon }}
-                    className={cn(
-                        "flex items-center justify-center transition-colors duration-300",
-                        active ? "text-emerald-400" : "text-neutral-200"
-                    )}
-                >
-                    {icon}
-                </motion.div>
-                {active && (
-                    <motion.div
-                        layoutId="active-indicator"
-                        className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-0.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
-                )}
+                {icon}
             </motion.div>
+            {active && (
+                <motion.div
+                    layoutId="active-indicator"
+                    className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-0.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+            )}
+        </motion.div>
+    );
+
+    if (onClick) {
+        return (
+            <button onClick={onClick} className="focus:outline-none border-none bg-transparent p-0 m-0">
+                {content}
+            </button>
+        );
+    }
+
+    return (
+        <Link href={href}>
+            {content}
         </Link>
     );
 }

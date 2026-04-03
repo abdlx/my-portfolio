@@ -16,6 +16,34 @@ export const TracingBeam = ({
     children: React.ReactNode;
     className?: string;
 }) => {
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    if (!isMounted) {
+        return (
+            <div className={cn("relative mx-auto h-full w-full max-w-6xl px-4 md:px-0", className)}>
+                {children}
+            </div>
+        );
+    }
+
+    return (
+        <TracingBeamInner className={className}>
+            {children}
+        </TracingBeamInner>
+    );
+};
+
+const TracingBeamInner = ({
+    children,
+    className,
+}: {
+    children: React.ReactNode;
+    className?: string;
+}) => {
     const ref = useRef<HTMLDivElement>(null);
     const shouldReduceMotion = useReducedMotion();
     const [isMobile, setIsMobile] = useState(false);
@@ -42,7 +70,6 @@ export const TracingBeam = ({
             setSvgHeight(contentRef.current.offsetHeight);
         }
 
-        // Handle height changes (e.g. from dynamic content)
         const resizeObserver = new ResizeObserver((entries) => {
             for (let entry of entries) {
                 setSvgHeight(entry.target.clientHeight);
@@ -71,7 +98,6 @@ export const TracingBeam = ({
         },
     );
 
-    // Skip the beam entirely on mobile for performance
     if (isMobile || shouldReduceMotion) {
         return (
             <div className={cn("relative mx-auto h-full w-full max-w-6xl px-4 md:px-0", className)}>

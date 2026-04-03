@@ -31,6 +31,20 @@ export const metadata: Metadata = {
     title: "Abdullah | AI Product Engineer",
     description: "Full-Stack Engineer. AI Pipeline Architect. SaaS Builder.",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Abdullah | AI Product Engineer Portfolio",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Abdullah | AI Product Engineer",
+    description: "Building software that thinks. Full-Stack Engineer & AI Architect.",
+    images: ["/og-image.png"],
   },
 };
 
