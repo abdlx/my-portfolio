@@ -412,7 +412,7 @@ export function DeepDive() {
                     >
                         <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white font-mono tracking-tight">
                             Diving into{" "}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-400">
+                            <span className="heading-highlight">
                                 Core Logic
                             </span>
                         </h2>

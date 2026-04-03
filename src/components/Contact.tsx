@@ -9,7 +9,7 @@ export function Contact() {
             <BackgroundBeamsWithCollision>
                 <div className="relative z-20 flex flex-col items-center justify-center px-4">
                     <h2 className="text-4xl md:text-7xl font-bold text-center text-white font-mono tracking-tight mb-8">
-                        Ready to <span className="text-indigo-500">Deploy?</span>
+                        Ready to <span className="heading-highlight">Deploy?</span>
                     </h2>
 
                     <div className="flex justify-center">

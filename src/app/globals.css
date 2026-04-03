@@ -102,6 +102,12 @@
   }
 }
 
+@layer components {
+  .heading-highlight {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#2DD4BF] via-[#3B82F6] to-[#818CF8];
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

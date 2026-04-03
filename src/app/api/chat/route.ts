@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   const result = streamText({
-    model: openrouter('meta-llama/llama-3-8b-instruct'), // Reliable default
+    model: openrouter('google/gemini-3.1-flash-lite-preview'), // Reliable default
     messages,
     system: `You are the AI assistant for Abdullah's professional portfolio.
     
@@ -39,5 +39,5 @@ export async function POST(req: Request) {
     Respond in a way that reflects Abdullah's high-tech, engineered aesthetic.`,
   });
 
-  return result.toDataStreamResponse();
+  return result.toTextStreamResponse();
 }

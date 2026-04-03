@@ -12,7 +12,7 @@ export function Pipeline() {
                     {/* Left side - Text */}
                     <div className="space-y-6">
                         <h2 className="text-3xl md:text-5xl font-bold text-white font-mono">
-                            Orchestrating <span className="text-indigo-500">Chaos</span>
+                            Orchestrating <span className="heading-highlight">Chaos</span>
                         </h2>
                         <p className="text-neutral-400 text-lg leading-relaxed max-w-xl">
                             Modern apps aren&apos;t just databases anymore. They are multi-agent systems.

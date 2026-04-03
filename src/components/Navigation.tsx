@@ -125,7 +125,7 @@ export function Navigation() {
                                 className={cn(
                                     "px-4 py-1.5 rounded-full text-xs font-medium tracking-wider uppercase transition-all duration-300",
                                     activeSection === item.href
-                                        ? "bg-indigo-500/20 text-indigo-400 shadow-[0_0_10px_rgba(99,102,241,0.2)]"
+                                        ? "bg-[#818CF8]/20 text-[#818CF8] shadow-[0_0_10px_rgba(129,140,248,0.2)]"
                                         : "text-neutral-400 hover:text-white"
                                 )}
                             >

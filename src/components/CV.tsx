@@ -9,8 +9,8 @@ export function CV() {
     <section id="cv" className="py-24 bg-black relative overflow-hidden">
       {/* Background Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-        <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-emerald-500/5 blur-[120px] rounded-full" />
-        <div className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-blue-500/5 blur-[120px] rounded-full" />
+        <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-[#2DD4BF]/5 blur-[120px] rounded-full" />
+        <div className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-[#818CF8]/5 blur-[120px] rounded-full" />
       </div>
 
       <div className="max-w-6xl mx-auto px-4 relative z-10">
@@ -32,7 +32,7 @@ export function CV() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-4xl md:text-5xl font-bold text-white mb-6"
             >
-              My <span className="text-emerald-500">Trajectory</span>
+              My <span className="heading-highlight">Trajectory</span>
             </motion.h2>
             
             <motion.p

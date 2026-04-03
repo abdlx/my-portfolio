@@ -3,11 +3,9 @@ import React from "react";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 
 import { Marquee } from "@/components/ui/marquee";
-import { BackgroundLines } from "@/components/ui/background-lines";
 import { ColourfulText } from "@/components/ui/colourful-text";
-import { cn } from "@/lib/utils";
-import { FileText, Terminal } from "lucide-react";
-import { BackgroundParticles } from "@/components/ui/background-particles";
+import { Terminal } from "lucide-react";
+import { GLSLHills } from "@/components/ui/glsl-hills";
 import { useUiSounds } from "@/hooks/useUiSounds";
 
 export function Hero() {
@@ -18,21 +16,21 @@ export function Hero() {
             id="home"
             className="relative min-h-[100svh] w-full bg-black antialiased flex flex-col justify-center"
         >
-            <BackgroundParticles />
-            <BackgroundLines className="flex items-center justify-center w-full flex-col px-4 py-20 md:py-0">
-                <div className="p-4 max-w-7xl mx-auto relative z-10 w-full text-center">
+            <GLSLHills />
+            <div className="flex items-center justify-center w-full flex-col px-4 py-20 md:py-0 relative z-10">
+                <div className="p-4 max-w-7xl mx-auto w-full text-center">
                     {/* Status Badge */}
                     <a
                         href="https://www.linkedin.com/in/mirza-abdullah-baig-ai-dev/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-neutral-800 bg-neutral-950/50 backdrop-blur-sm mb-8 hover:border-emerald-500/50 hover:bg-neutral-900/50 transition-all duration-300 group cursor-pointer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-neutral-800 bg-neutral-950/50 backdrop-blur-sm mb-8 hover:border-[#2DD4BF]/50 hover:bg-neutral-900/50 transition-all duration-300 group cursor-pointer"
                     >
                         <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2DD4BF]/75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2DD4BF]"></span>
                         </span>
-                        <span className="text-neutral-300 text-sm font-mono group-hover:text-emerald-400 transition-colors">
+                        <span className="text-neutral-300 text-sm font-mono group-hover:text-[#2DD4BF] transition-colors">
                             System Online | Open to Work
                         </span>
                     </a>
@@ -65,17 +63,17 @@ export function Hero() {
                                 {/* Glass Background */}
                                 <div className="absolute inset-0 bg-neutral-900/50 backdrop-blur-md border border-neutral-800 group-hover:border-neutral-600 transition-all duration-500" />
                                 {/* Shine Effect */}
-                                <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+                                <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#2DD4BF]/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
 
                                 <span className="relative flex items-center gap-2">
-                                    <Terminal size={18} className="text-emerald-500 group-hover:rotate-12 transition-transform duration-300" />
+                                    <Terminal size={18} className="text-[#2DD4BF] group-hover:rotate-12 transition-transform duration-300" />
                                     Explore the Architecture
                                 </span>
                             </button>
                         </a>
                     </div>
                 </div>
-            </BackgroundLines>
+            </div>
 
             {/* Tech Stack Marquee at Bottom */}
             <div className="absolute bottom-4 md:bottom-10 left-0 w-full overflow-hidden z-20">

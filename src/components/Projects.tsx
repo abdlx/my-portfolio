@@ -135,7 +135,7 @@ export function Projects() {
                 {/* Header */}
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-5xl font-bold text-white font-mono mb-4">
-                        Deployed <span className="text-indigo-500">Systems</span>
+                        Deployed <span className="heading-highlight">Systems</span>
                     </h2>
                     <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
                         High-performance AI infrastructures and production-grade applications
