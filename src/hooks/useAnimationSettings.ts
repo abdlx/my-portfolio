@@ -4,13 +4,11 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface AnimationSettings {
     animationsEnabled: boolean;
-    soundEnabled: boolean;
     reducedMotion: boolean;
 }
 
 interface AnimationSettingsContextType extends AnimationSettings {
     toggleAnimations: () => void;
-    toggleSound: () => void;
     isHydrated: boolean;
 }
 
@@ -21,7 +19,6 @@ const AnimationSettingsContext = createContext<AnimationSettingsContextType | nu
 export function AnimationSettingsProvider({ children }: { children: React.ReactNode }) {
     const [settings, setSettings] = useState<AnimationSettings>({
         animationsEnabled: true,
-        soundEnabled: true,
         reducedMotion: false,
     });
     const [isHydrated, setIsHydrated] = useState(false);
@@ -36,20 +33,17 @@ export function AnimationSettingsProvider({ children }: { children: React.ReactN
                 const parsed = JSON.parse(savedSettings);
                 setSettings({
                     animationsEnabled: parsed.animationsEnabled ?? true,
-                    soundEnabled: parsed.soundEnabled ?? true,
                     reducedMotion: prefersReducedMotion,
                 });
             } catch {
                 setSettings({
                     animationsEnabled: true,
-                    soundEnabled: true,
                     reducedMotion: prefersReducedMotion,
                 });
             }
         } else {
             setSettings({
                 animationsEnabled: true,
-                soundEnabled: true,
                 reducedMotion: prefersReducedMotion,
             });
         }
@@ -72,24 +66,18 @@ export function AnimationSettingsProvider({ children }: { children: React.ReactN
                 STORAGE_KEY,
                 JSON.stringify({
                     animationsEnabled: settings.animationsEnabled,
-                    soundEnabled: settings.soundEnabled,
                 })
             );
         }
-    }, [settings.animationsEnabled, settings.soundEnabled, isHydrated]);
+    }, [settings.animationsEnabled, isHydrated]);
 
     const toggleAnimations = () => {
         setSettings((prev) => ({ ...prev, animationsEnabled: !prev.animationsEnabled }));
     };
 
-    const toggleSound = () => {
-        setSettings((prev) => ({ ...prev, soundEnabled: !prev.soundEnabled }));
-    };
-
     const value: AnimationSettingsContextType = {
         ...settings,
         toggleAnimations,
-        toggleSound,
         isHydrated,
     };
 

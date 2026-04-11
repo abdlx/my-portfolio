@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import { FloatingDock } from "@/components/ui/floating-dock";
-import { Home, Terminal, FlaskConical, Mail, Cpu, Github, Linkedin, MessageSquare, FileText, Bot, Menu, X, Play, Pause, Volume2, VolumeX } from "lucide-react";
+import { Home, Terminal, FlaskConical, Mail, Cpu, Github, Linkedin, MessageSquare, FileText, Bot, Menu, X, Play, Pause } from "lucide-react";
 import GlassSurface from "./GlassSurface";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -77,7 +77,7 @@ export function Navigation() {
     const [isCVOpen, setIsCVOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { playHover, playClick } = useUiSounds();
-    const { animationsEnabled, toggleAnimations, soundEnabled, toggleSound, isHydrated } = useAnimationSettings();
+    const { animationsEnabled, toggleAnimations, isHydrated } = useAnimationSettings();
 
     useEffect(() => {
         const observerOptions = {
@@ -205,21 +205,6 @@ export function Navigation() {
                             title={animationsEnabled ? "Disable animations" : "Enable animations"}
                         >
                             {animationsEnabled ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                        </button>
-                        <div className="w-px h-4 bg-neutral-700" />
-                        <button
-                            onClick={() => {
-                                toggleSound();
-                                playClick();
-                            }}
-                            onMouseEnter={() => playHover()}
-                            className={cn(
-                                "p-2 rounded-full transition-all duration-300",
-                                soundEnabled ? "text-emerald-400" : "text-neutral-500"
-                            )}
-                            title={soundEnabled ? "Disable sound" : "Enable sound"}
-                        >
-                            {soundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
                         </button>
                     </GlassSurface>
                 )}
