@@ -4,9 +4,9 @@ import { NumberTicker } from "@/components/ui/number-ticker";
 
 export function Metrics() {
     return (
-        <section className="py-32 bg-black relative">
+        <section className="py-32 bg-black relative overflow-hidden">
             {/* Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] aspect-square bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none" />
             
             <div className="max-w-7xl mx-auto px-4 relative z-10">
                 <div className="text-center mb-16">

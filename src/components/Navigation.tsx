@@ -135,7 +135,7 @@ export function Navigation() {
     return (
         <>
             {/* Desktop Navigation & Brand */}
-            <div className="fixed top-12 left-1/2 -translate-x-1/2 z-50 hidden md:flex items-center gap-3 will-change-transform">
+            <div className="fixed top-12 left-1/2 -translate-x-1/2 z-50 hidden md:flex items-center gap-3 will-change-transform max-w-[calc(100vw-2rem)] px-2">
                 {/* Brand Pill */}
                 <GlassSurface
                     width="auto"
@@ -231,25 +231,27 @@ export function Navigation() {
             </div>
 
             {/* Mobile Consolidated Menu */}
-            <div className="fixed top-8 right-6 z-50 md:hidden">
+            <div className="fixed top-8 right-6 z-50 md:hidden max-w-[calc(100vw-10rem)]">
                 <div className="flex flex-col items-end gap-4 relative">
                     {/* Top Row: Nav Links + Animation Toggle + Hamburger */}
                     <div className="flex items-center gap-3">
                         {/* Animation Toggle - Left of Hamburger */}
                         {isHydrated && (
-                            <motion.button
+                            <button
                                 onClick={() => {
                                     toggleAnimations();
                                     playClick();
                                 }}
                                 onMouseEnter={() => playHover()}
-                                className="relative z-[60] flex items-center justify-center h-10 w-10 rounded-full overflow-hidden"
-                                whileTap={{ scale: 0.95 }}
+                                className={cn(
+                                    "relative z-[60] flex items-center justify-center h-12 w-12 rounded-full overflow-hidden transition-all duration-300 active:scale-95",
+                                    isMobileMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+                                )}
                             >
                                 <GlassSurface
-                                    width={40}
-                                    height={40}
-                                    borderRadius={20}
+                                    width={48}
+                                    height={48}
+                                    borderRadius={24}
                                     className="flex items-center justify-center p-0"
                                     brightness={15}
                                     opacity={0.8}
@@ -262,7 +264,7 @@ export function Navigation() {
                                         {animationsEnabled ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                                     </div>
                                 </GlassSurface>
-                            </motion.button>
+                            </button>
                         )}
 
                         <AnimatePresence>
