@@ -230,7 +230,7 @@ function IconContainer({
     const wrapperClasses = cn(
         "aspect-square rounded-full border flex items-center justify-center relative shadow-inner overflow-visible",
         active
-            ? "bg-gradient-to-b from-emerald-500/10 to-emerald-950/20 border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+            ? "bg-gradient-to-b from-emerald-500/10 to-emerald-950/20 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
             : "bg-gradient-to-b from-neutral-800/50 to-neutral-950/50 border-white/5 shadow-black/50"
     );
 
