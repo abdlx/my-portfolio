@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { useUiSounds } from '@/hooks/useUiSounds';
+import { useAnimationSettings } from '@/hooks/useAnimationSettings';
 
 export interface BentoCardProps {
   color?: string;
@@ -505,7 +506,8 @@ const MagicBento: React.FC<BentoProps> = ({
 }) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const isMobile = useMobileDetection();
-  const shouldDisableAnimations = disableAnimations || isMobile;
+  const { animationsEnabled } = useAnimationSettings();
+  const shouldDisableAnimations = disableAnimations || isMobile || !animationsEnabled;
 
   return (
     <>

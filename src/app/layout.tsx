@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import { AnimationSettingsProvider } from "@/hooks/useAnimationSettings";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -120,7 +121,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${jetbrainsMono.variable} ${inter.variable} antialiased bg-black text-white`}
       >
-        {children}
+        <AnimationSettingsProvider>
+          {children}
+        </AnimationSettingsProvider>
       </body>
     </html>
   );

@@ -1,11 +1,45 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 const GLSLHills = ({ width = '100%', height = '100%', cameraZ = 125, planeSize = 256, speed = 0.5 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  // Intersection Observer for lazy initialization
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    observer.observe(containerRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Check for reduced motion preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReducedMotion(mediaQuery.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setReducedMotion(e.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
 
   useEffect(() => {
     const isWebGLAvailable = () => {
@@ -17,10 +51,12 @@ const GLSLHills = ({ width = '100%', height = '100%', cameraZ = 125, planeSize =
       }
     };
 
-    if (!canvasRef.current || !isWebGLAvailable()) {
-      console.warn('WebGL is not available or canvas is missing.');
+    if (!isVisible || !canvasRef.current || !isWebGLAvailable()) {
       return;
     }
+
+    // If reduced motion is preferred, render a static frame once and stop
+    const effectiveSpeed = reducedMotion ? 0 : speed;
 
     // Plane class
     class Plane {
@@ -33,7 +69,7 @@ const GLSLHills = ({ width = '100%', height = '100%', cameraZ = 125, planeSize =
           time: { type: 'f', value: 0 },
         };
         this.mesh = this.createMesh();
-        this.time = speed;
+        this.time = effectiveSpeed;
       }
 
       createMesh() {
@@ -208,11 +244,11 @@ const GLSLHills = ({ width = '100%', height = '100%', cameraZ = 125, planeSize =
     };
 
     let animationId: number;
-    let isVisible = true;
+    let isElementVisible = true;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        isVisible = entry.isIntersecting;
+        isElementVisible = entry.isIntersecting;
       },
       { threshold: 0 }
     );
@@ -222,7 +258,7 @@ const GLSLHills = ({ width = '100%', height = '100%', cameraZ = 125, planeSize =
     }
 
     const renderLoop = () => {
-      if (isVisible) {
+      if (isElementVisible && !reducedMotion) {
         render();
       }
       animationId = requestAnimationFrame(renderLoop);
@@ -236,7 +272,12 @@ const GLSLHills = ({ width = '100%', height = '100%', cameraZ = 125, planeSize =
       scene.add(plane.mesh);
       window.addEventListener('resize', resize);
       resize();
-      renderLoop();
+      // Render once immediately for static display
+      render();
+      // Only start animation loop if not reduced motion
+      if (!reducedMotion) {
+        renderLoop();
+      }
     };
 
     try {
@@ -254,7 +295,7 @@ const GLSLHills = ({ width = '100%', height = '100%', cameraZ = 125, planeSize =
       plane.mesh.geometry.dispose();
       (plane.mesh.material as THREE.Material).dispose();
     };
-  }, [cameraZ, planeSize, speed]);
+  }, [cameraZ, planeSize, speed, reducedMotion, isVisible]);
 
   return (
     <div ref={containerRef} style={{ position: 'absolute', top: 0, left: 0, width, height, overflow: 'hidden', pointerEvents: 'none' }}> 

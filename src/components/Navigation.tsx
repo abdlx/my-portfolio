@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import { FloatingDock } from "@/components/ui/floating-dock";
-import { Home, Terminal, FlaskConical, Mail, Cpu, Github, Linkedin, MessageSquare, FileText, Bot, Menu, X } from "lucide-react";
+import { Home, Terminal, FlaskConical, Mail, Cpu, Github, Linkedin, MessageSquare, FileText, Bot, Menu, X, Play, Pause, Volume2, VolumeX } from "lucide-react";
 import GlassSurface from "./GlassSurface";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ const AITerminal = dynamic(() => import("./AITerminal").then(mod => mod.AITermin
 const CVWindow = dynamic(() => import("./CVWindow").then(mod => mod.CVWindow), { ssr: false });
 import { motion, AnimatePresence } from "framer-motion";
 import { useUiSounds } from "@/hooks/useUiSounds";
+import { useAnimationSettings } from "@/hooks/useAnimationSettings";
 
 const IconLayoutNavbarCollapse = ({ className }: { className?: string }) => {
     return (
@@ -76,6 +77,7 @@ export function Navigation() {
     const [isCVOpen, setIsCVOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { playHover, playClick } = useUiSounds();
+    const { animationsEnabled, toggleAnimations, soundEnabled, toggleSound, isHydrated } = useAnimationSettings();
 
     useEffect(() => {
         const observerOptions = {
@@ -178,6 +180,49 @@ export function Navigation() {
                         ))}
                     </div>
                 </GlassSurface>
+
+                {/* Animation Toggle */}
+                {isHydrated && (
+                    <GlassSurface
+                        width="auto"
+                        height={46}
+                        borderRadius={23}
+                        className="flex items-center px-2 gap-1"
+                        brightness={15}
+                        opacity={0.8}
+                        backgroundOpacity={0.4}
+                    >
+                        <button
+                            onClick={() => {
+                                toggleAnimations();
+                                playClick();
+                            }}
+                            onMouseEnter={() => playHover()}
+                            className={cn(
+                                "p-2 rounded-full transition-all duration-300",
+                                animationsEnabled ? "text-emerald-400" : "text-neutral-500"
+                            )}
+                            title={animationsEnabled ? "Disable animations" : "Enable animations"}
+                        >
+                            {animationsEnabled ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                        </button>
+                        <div className="w-px h-4 bg-neutral-700" />
+                        <button
+                            onClick={() => {
+                                toggleSound();
+                                playClick();
+                            }}
+                            onMouseEnter={() => playHover()}
+                            className={cn(
+                                "p-2 rounded-full transition-all duration-300",
+                                soundEnabled ? "text-emerald-400" : "text-neutral-500"
+                            )}
+                            title={soundEnabled ? "Disable sound" : "Enable sound"}
+                        >
+                            {soundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+                        </button>
+                    </GlassSurface>
+                )}
             </div>
 
             {/* Mobile Brand Pill */}
@@ -203,8 +248,38 @@ export function Navigation() {
             {/* Mobile Consolidated Menu */}
             <div className="fixed top-8 right-6 z-50 md:hidden">
                 <div className="flex flex-col items-end gap-4 relative">
-                    {/* Top Row: Nav Links + Hamburger */}
+                    {/* Top Row: Nav Links + Animation Toggle + Hamburger */}
                     <div className="flex items-center gap-3">
+                        {/* Animation Toggle - Left of Hamburger */}
+                        {isHydrated && (
+                            <motion.button
+                                onClick={() => {
+                                    toggleAnimations();
+                                    playClick();
+                                }}
+                                onMouseEnter={() => playHover()}
+                                className="relative z-[60] flex items-center justify-center h-10 w-10 rounded-full overflow-hidden"
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <GlassSurface
+                                    width={40}
+                                    height={40}
+                                    borderRadius={20}
+                                    className="flex items-center justify-center p-0"
+                                    brightness={15}
+                                    opacity={0.8}
+                                    backgroundOpacity={0.4}
+                                >
+                                    <div className={cn(
+                                        "transition-colors duration-300",
+                                        animationsEnabled ? "text-emerald-400" : "text-neutral-500"
+                                    )}>
+                                        {animationsEnabled ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                                    </div>
+                                </GlassSurface>
+                            </motion.button>
+                        )}
+
                         <AnimatePresence>
                             {isMobileMenuOpen && (
                                 <motion.div 

@@ -4,9 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { type Container, type ISourceOptions } from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim";
+import { useAnimationSettings } from "@/hooks/useAnimationSettings";
 
 export const BackgroundParticles = () => {
     const [init, setInit] = useState(false);
+    const { animationsEnabled, reducedMotion } = useAnimationSettings();
 
     useEffect(() => {
         initParticlesEngine(async (engine) => {
@@ -22,7 +24,7 @@ export const BackgroundParticles = () => {
 
     const options: ISourceOptions = useMemo(
         () => ({
-            fpsLimit: 60,
+            fpsLimit: reducedMotion ? 30 : 60,
             interactivity: {
                 events: {
                     onClick: {
@@ -30,7 +32,7 @@ export const BackgroundParticles = () => {
                         mode: "push",
                     },
                     onHover: {
-                        enable: true,
+                        enable: !reducedMotion,
                         mode: "bubble",
                     },
                 },
@@ -52,7 +54,7 @@ export const BackgroundParticles = () => {
                     color: "#6366f1",
                     distance: 150,
                     enable: true,
-                    opacity: 0.15,
+                    opacity: reducedMotion ? 0.08 : 0.15,
                     width: 1,
                 },
                 move: {
@@ -62,17 +64,17 @@ export const BackgroundParticles = () => {
                         default: "bounce",
                     },
                     random: true,
-                    speed: 0.8,
+                    speed: reducedMotion ? 0.3 : 0.8,
                     straight: false,
                 },
                 number: {
                     density: {
                         enable: true,
                     },
-                    value: 120,
+                    value: reducedMotion ? 40 : 80,
                 },
                 opacity: {
-                    value: 0.1,
+                    value: reducedMotion ? 0.05 : 0.1,
                 },
                 shape: {
                     type: "circle",
@@ -81,21 +83,21 @@ export const BackgroundParticles = () => {
                     value: { min: 1, max: 2 },
                 },
             },
-            detectRetina: true,
+            detectRetina: !reducedMotion,
         }),
-        []
+        [reducedMotion]
     );
 
-    if (init) {
-        return (
-            <Particles
-                id="tsparticles"
-                particlesLoaded={particlesLoaded}
-                options={options}
-                className="absolute inset-0 z-0"
-            />
-        );
+    if (!init || !animationsEnabled) {
+        return null;
     }
 
-    return null;
+    return (
+        <Particles
+            id="tsparticles"
+            particlesLoaded={particlesLoaded}
+            options={options}
+            className="absolute inset-0 z-0"
+        />
+    );
 };
