@@ -1,0 +1,45 @@
+# Abdullah | AI Product Engineer
+
+Full-Stack Engineer & AI Pipeline Architect specializing in building production-grade AI systems, SaaS platforms, and software that thinks.
+
+## Roles
+- **AI Product Engineer**: Bridging the gap between AI demos and production engineering.
+- **AI Pipeline Architect**: Designing scalable RAG and LLM orchestration layers.
+- **Full-Stack SaaS Builder**: Crafting immersive, high-performance web applications.
+
+## Technical Stack
+- **Languages**: TypeScript, JavaScript, Python
+- **Frontend**: Next.js 15/16, Tailwind CSS 4, Framer Motion, Spline 3D
+- **Backend & Database**: Supabase, PostgreSQL, Redis (Upstash), Docker
+- **AI**: OpenAI, LangChain, Vercel AI SDK, OpenRouter, Llama 3, Gemini
+- **Infrastructure**: Vercel, Hetzner, Dockerized Playwright Swarms
+
+## Featured Projects
+
+### Fulfix
+- **Description**: Agency-Grade Order Management System (OMS) for the Pakistani market.
+- **Key Feature**: AI TrustScore™ using Llama 3 to predict RTO (Return to Origin) risks.
+- **Stack**: Next.js, Supabase, OpenRouter, Upstash, WhatsApp Business API.
+- **URL**: https://fulfix.pk
+
+### ASAS Forge
+- **Description**: Premium digital catalog for architectural hardware.
+- **Key Feature**: RAG-powered conversational search for 10k+ SKUs.
+- **Stack**: Next.js, Vercel AI SDK, RAG, jsPDF.
+- **URL**: https://asasforge.com
+
+### Arsalan Malik (Pitch)
+- **Description**: Immersive Web3 hub with Spline 3D environments.
+- **Key Feature**: Scroll-synced 3D animations and AI mentorship agents.
+- **Stack**: Next.js 16, Spline, Framer Motion, Tailwind CSS 4.
+- **URL**: https://crypto-guru-omega.vercel.app/
+
+### EchoHarvest
+- **Description**: Industrial-grade distributed data harvesting infrastructure.
+- **Key Feature**: 'Ghost Protocol' for bot evasion and serverless Playwright swarm on Docker.
+- **Stack**: Next.js, Playwright, Docker, Redis.
+
+## Contact & Socials
+- **LinkedIn**: https://www.linkedin.com/in/mirza-abdullah-baig-ai-dev/
+- **Email**: mirzaabdulla300@gmail.com
+- **GitHub**: https://github.com/abdlx

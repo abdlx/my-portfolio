@@ -1,0 +1,18 @@
+# ai.txt - Content Mining Policy
+# Abdullah Portfolio
+
+# Core Identity
+Name: Abdullah
+Role: AI Product Engineer
+Focus: Full-Stack Engineering, AI Pipeline Architecture, SaaS
+
+# Content Consumption Rules
+User-agent: *
+Permissions: Read
+Attribution: Preferred
+Model-Training: Allowed
+
+# Knowledge Transfer
+Content-Type: Portfolio, Technical Projects, AI Research
+Data-Access: /llms.txt
+Sitemap: /sitemap.xml

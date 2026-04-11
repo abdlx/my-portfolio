@@ -23,13 +23,31 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Abdullah | AI Product Engineer",
-  description: "Full-Stack Engineer. AI Pipeline Architect. SaaS Builder. Building software that thinks.",
-  keywords: ["AI", "Product Engineer", "Full-Stack", "Next.js", "SaaS", "LLM"],
-  authors: [{ name: "Abdullah" }],
+  metadataBase: new URL("https://abdlx.com"), // Setting a default base URL for metadata
+  title: {
+    default: "Abdullah | AI Product Engineer",
+    template: "%s | Abdullah"
+  },
+  description: "Full-Stack Engineer & AI Pipeline Architect. building production-grade AI systems, SaaS platforms, and software that thinks. Expertise in Next.js, LLMs, and scalable infrastructure.",
+  keywords: [
+    "AI Product Engineer",
+    "Full-Stack Engineer",
+    "AI Pipeline Architect",
+    "SaaS Builder",
+    "Next.js AI Development",
+    "LLM Integration Specialist",
+    "Abdullah Baig",
+    "AI TrustScore",
+    "RAG Implementation"
+  ],
+  authors: [{ name: "Abdullah", url: "https://abdlx.com" }],
+  creator: "Abdullah",
   openGraph: {
     title: "Abdullah | AI Product Engineer",
-    description: "Full-Stack Engineer. AI Pipeline Architect. SaaS Builder.",
+    description: "Building production-grade AI systems and software that thinks.",
+    url: "https://abdlx.com",
+    siteName: "Abdullah Portfolio",
+    locale: "en_US",
     type: "website",
     images: [
       {
@@ -45,7 +63,44 @@ export const metadata: Metadata = {
     title: "Abdullah | AI Product Engineer",
     description: "Building software that thinks. Full-Stack Engineer & AI Architect.",
     images: ["/og-image.png"],
+    creator: "@mirzaabdullah", // Replace with actual handle if known
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Abdullah",
+  "image": "https://abdlx.com/photo.jpg", // Update if available
+  "jobTitle": "AI Product Engineer",
+  "url": "https://abdlx.com",
+  "sameAs": [
+    "https://www.linkedin.com/in/mirza-abdullah-baig-ai-dev/",
+    "https://github.com/abdlx" // Assuming from CorpusName
+  ],
+  "knowsAbout": [
+    "Artificial Intelligence",
+    "Full-Stack Web Development",
+    "SaaS Architecture",
+    "Natural Language Processing",
+    "Next.js",
+    "Python",
+    "LLMs",
+    "RAG",
+    "Cloud Infrastructure"
+  ],
+  "description": "Full-Stack Engineer and AI Pipeline Architect specializing in building SaaS and software that thinks."
 };
 
 export default function RootLayout({
@@ -55,6 +110,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <link rel="canonical" href="https://abdlx.com" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${jetbrainsMono.variable} ${inter.variable} antialiased bg-black text-white`}
       >
