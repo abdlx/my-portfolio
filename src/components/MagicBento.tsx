@@ -517,19 +517,18 @@ const MagicBento: React.FC<BentoProps> = ({
             --glow-intensity: 0;
             --glow-radius: 200px;
             --glow-color: ${glowColor};
-            --border-color: #392e4e;
-            --background-dark: #060010;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --background-dark: #000000;
             --white: hsl(0, 0%, 100%);
-            --purple-primary: rgba(132, 0, 255, 1);
-            --purple-glow: rgba(132, 0, 255, 0.2);
-            --purple-border: rgba(132, 0, 255, 0.8);
+            --accent-primary: rgba(${glowColor}, 1);
+            --accent-glow: rgba(${glowColor}, 0.1);
           }
           
           .card-responsive {
             grid-template-columns: 1fr;
-            width: 90%;
+            width: 100%;
             margin: 0 auto;
-            padding: 0.5rem;
+            padding: 1rem;
           }
           
           @media (min-width: 600px) {
@@ -541,32 +540,23 @@ const MagicBento: React.FC<BentoProps> = ({
           @media (min-width: 1024px) {
             .card-responsive {
               grid-template-columns: repeat(4, 1fr);
+              gap: 1rem;
             }
             
-            .card-responsive .card:nth-child(3) {
-              grid-column: span 2;
-              grid-row: span 2;
-            }
-            
-            .card-responsive .card:nth-child(4) {
-              grid-column: 1 / span 2;
-              grid-row: 2 / span 2;
-            }
-            
-            .card-responsive .card:nth-child(6) {
-              grid-column: 4;
-              grid-row: 3;
-            }
+            .card-responsive .card:nth-child(1) { grid-column: span 1; grid-row: span 1; }
+            .card-responsive .card:nth-child(2) { grid-column: span 1; grid-row: span 1; }
+            .card-responsive .card:nth-child(3) { grid-column: span 2; grid-row: span 2; }
+            .card-responsive .card:nth-child(4) { grid-column: span 2; grid-row: span 1; }
           }
           
           .card--border-glow::after {
             content: '';
             position: absolute;
             inset: 0;
-            padding: 2px;
+            padding: 1px;
             background: radial-gradient(var(--glow-radius) circle at var(--glow-x) var(--glow-y),
-                rgba(${glowColor}, calc(var(--glow-intensity) * 0.8)) 0%,
-                rgba(${glowColor}, calc(var(--glow-intensity) * 0.4)) 30%,
+                rgba(${glowColor}, calc(var(--glow-intensity) * 0.5)) 0%,
+                rgba(${glowColor}, calc(var(--glow-intensity) * 0.2)) 30%,
                 transparent 60%);
             border-radius: inherit;
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -579,12 +569,8 @@ const MagicBento: React.FC<BentoProps> = ({
             z-index: 1;
           }
           
-          .card--border-glow:hover::after {
-            opacity: 1;
-          }
-          
-          .card--border-glow:hover {
-            box-shadow: 0 4px 20px rgba(46, 24, 78, 0.4), 0 0 30px rgba(${glowColor}, 0.2);
+          .card:hover {
+            border-color: rgba(${glowColor}, 0.3);
           }
           
           .particle::before {
@@ -594,13 +580,9 @@ const MagicBento: React.FC<BentoProps> = ({
             left: -2px;
             right: -2px;
             bottom: -2px;
-            background: rgba(${glowColor}, 0.2);
+            background: rgba(${glowColor}, 0.1);
             border-radius: 50%;
             z-index: -1;
-          }
-          
-          .particle-container:hover {
-            box-shadow: 0 4px 20px rgba(46, 24, 78, 0.2), 0 0 30px rgba(${glowColor}, 0.2);
           }
           
           .text-clamp-1 {
@@ -620,11 +602,24 @@ const MagicBento: React.FC<BentoProps> = ({
             overflow: hidden;
             text-overflow: ellipsis;
           }
+
+          .card__label {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.4);
+          }
+
+          .card__title {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+          }
           
           @media (max-width: 599px) {
             .card-responsive {
               grid-template-columns: 1fr;
-              width: 90%;
+              width: 100%;
               margin: 0 auto;
               padding: 0.5rem;
             }
@@ -682,11 +677,11 @@ const MagicBento: React.FC<BentoProps> = ({
                     <span className="card__label text-base">{card.label}</span>
                   </div>
                   <div className="card__content flex flex-col relative text-white">
-                    <h3 className={`card__title font-normal text-base m-0 mb-1 ${textAutoHide ? 'text-clamp-1' : ''}`}>
+                    <h3 className={`card__title text-lg md:text-xl font-bold mb-2 ${textAutoHide ? 'text-clamp-1' : ''}`}>
                       {card.title}
                     </h3>
                     <p
-                      className={`card__description text-xs leading-5 opacity-90 ${textAutoHide ? 'text-clamp-2' : ''}`}
+                      className={`card__description text-xs md:text-sm leading-relaxed text-neutral-400 ${textAutoHide ? 'text-clamp-2' : ''}`}
                     >
                       {card.description}
                     </p>

@@ -4,6 +4,11 @@ import Image from "next/image";
 import { ProjectModal } from "./ProjectModal";
 import MagicBento from "./MagicBento";
 
+interface ImpactMetric {
+    label: string;
+    value: string;
+}
+
 interface ProjectData {
     title: string;
     description: string;
@@ -15,6 +20,8 @@ interface ProjectData {
     icon?: React.ReactNode;
     className?: string;
     header?: React.ReactNode;
+    impactMetrics?: ImpactMetric[];
+    kpiHighlight?: string;
 }
 
 const projects: ProjectData[] = [
@@ -37,6 +44,12 @@ const projects: ProjectData[] = [
         ],
         image: "/projects/fulfix.png",
         liveUrl: "https://fulfix.pk",
+        kpiHighlight: "15% RTO Reduction",
+        impactMetrics: [
+            { label: "RTO Optimization", value: "15% Reduction" },
+            { label: "Order Volume", value: "$10k+ processed" },
+            { label: "Address Scans", value: "5000+ daily" },
+        ],
     },
     {
         title: "ASAS Forge",
@@ -57,6 +70,12 @@ const projects: ProjectData[] = [
         ],
         image: "/projects/asas-forge.png",
         liveUrl: "https://asasforge.com",
+        kpiHighlight: "1.2s RAG Response",
+        impactMetrics: [
+            { label: "Search Latency", value: "< 1.2 seconds" },
+            { label: "Inventory Size", value: "10k+ SKUs" },
+            { label: "Automation", value: "100% PDF Gen" },
+        ],
     },
     {
         title: "Arsalan Malik (Pitch)",
@@ -75,6 +94,12 @@ const projects: ProjectData[] = [
         ],
         image: "/projects/arsalan-malik.png",
         liveUrl: "https://crypto-guru-omega.vercel.app/",
+        kpiHighlight: "100 Performance Score",
+        impactMetrics: [
+            { label: "Core Web Vitals", value: "100/100" },
+            { label: "Community Size", value: "10k+ users" },
+            { label: "Engagement", value: "40% increase" },
+        ],
     },
     {
         title: "EchoHarvest",
@@ -92,7 +117,13 @@ const projects: ProjectData[] = [
             "Supabase",
         ],
         image: "/projects/Echo-Harvest.png",
-        githubUrl: "https://github.com",
+        githubUrl: "https://github.com/abdlx",
+        kpiHighlight: "99.9% Success Rate",
+        impactMetrics: [
+            { label: "Downtime", value: "0.01%" },
+            { label: "Bot Evasion", value: "Ghost Protocol" },
+            { label: "Infrastructure", value: "Docker Swarm" },
+        ],
     },
 ];
 
@@ -110,23 +141,11 @@ export function Projects() {
             title: p.title,
             description: p.description,
             label: "Deployed System",
-            color: "#060010",
+            color: "#000000",
             onClick: () => handleProjectClick(p),
             liveUrl: p.liveUrl,
             githubUrl: p.githubUrl
         })),
-        {
-            title: "Autonomous Agents",
-            description: "Researching multi-agent orchestration for enterprise automation.",
-            label: "Research",
-            color: "#060010"
-        },
-        {
-            title: "Next.js 16 Preview",
-            description: "Exploring advanced React Server Component patterns and hydration tech.",
-            label: "Learning",
-            color: "#060010"
-        }
     ];
 
     return (
@@ -149,12 +168,12 @@ export function Projects() {
                         enableStars
                         enableSpotlight
                         enableBorderGlow={true}
-                        enableTilt={false}
-                        enableMagnetism={false}
+                        enableTilt={true}
+                        enableMagnetism={true}
                         clickEffect
                         spotlightRadius={400}
                         particleCount={12}
-                        glowColor="132, 0, 255"
+                        glowColor="45, 212, 191"
                         disableAnimations={false}
                         cardData={bentoData}
                     />

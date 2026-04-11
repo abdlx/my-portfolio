@@ -54,6 +54,14 @@ export default function Home() {
           <li>Full-Stack Development (TypeScript, Python)</li>
         </ul>
 
+        <h2>Quantified Impact (Numbers-Backed)</h2>
+        <ul>
+            <li><strong>15% Reduction in RTO:</strong> Optimized order delivery for Fulfix using Llama 3 scoring.</li>
+            <li><strong>Sub-1.2s Latency:</strong> Engineered high-performance RAG pipelines for 10k+ SKU hardware catalogs.</li>
+            <li><strong>100k+ Monthly Throughput:</strong> Built serverless Playwright swarms for industrial-grade data harvesting.</li>
+            <li><strong>100/100 Core Web Vitals:</strong> Consistently delivering perfect performance scores for premium client sites.</li>
+        </ul>
+
         <h2>Featured Projects</h2>
         <article>
           <h3>Fulfix</h3>
