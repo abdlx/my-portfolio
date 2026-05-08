@@ -124,12 +124,12 @@ export function Navigation() {
             href: "#",
             onClick: toggleCV
         },
-        {
+        /* {
             title: "AI Clone",
             icon: <Bot className="h-full w-full" />,
             href: "#",
             onClick: toggleTerminal
-        }
+        } */
     ], [isTerminalOpen, isCVOpen]);
 
     return (

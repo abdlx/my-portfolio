@@ -18,20 +18,19 @@ export function AITerminal({
     const { playHover, playClick, playNotify } = useUiSounds();
     const [input, setInput] = useState("");
     const { messages, sendMessage, status, stop } = useChat() as any;
-    const isLoading = status === 'streaming' || status === 'submitting';
+    const isLoading = status !== 'ready';
     const handleSubmit = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
         if (!input || isLoading) return;
         
         playClick();
-        // Vercel AI SDK 4+ sendMessage handles the user message
         const currentInput = input;
-        setInput(""); // Promptly clear input for better UX
+        setInput(""); 
         try {
-            await sendMessage({ role: 'user', content: currentInput });
+            await sendMessage({ text: currentInput });
         } catch (err) {
             console.error("Failed to send message:", err);
-            setInput(currentInput); // Restore on failure
+            setInput(currentInput);
         }
     };
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -164,7 +163,10 @@ export function AITerminal({
                                         {m.role === 'assistant' && (
                                             <span className="text-indigo-400/40 block mb-2 text-[10px] font-mono tracking-tighter uppercase">Processor Output //</span>
                                         )}
-                                        {m.content}
+                                        {m.parts?.map((p: any, i: number) => {
+                                            if (p.type === 'text') return <span key={i}>{p.text}</span>;
+                                            return null;
+                                        })}
                                     </div>
                                 </div>
                             ))}
