@@ -28,7 +28,15 @@ export default function Home() {
           <div className="flex flex-col gap-0">
             <Pipeline />
             <Metrics />
-            <Projects />
+          </div>
+        </TracingBeam>
+      </div>
+
+      <Projects />
+
+      <div className="relative">
+        <TracingBeam>
+          <div className="flex flex-col gap-0">
             <Testimonials />
             <KnowledgeGraph />
           </div>

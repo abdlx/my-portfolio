@@ -19,7 +19,7 @@ export function Hero() {
     return (
         <section
             id="home"
-            className="relative min-h-[100svh] w-full bg-black antialiased flex flex-col justify-center"
+            className="relative min-h-[100svh] w-full bg-black antialiased flex flex-col justify-center snap-start"
         >
             <GLSLHills />
             <div className="flex items-center justify-center w-full flex-col px-4 py-20 md:py-0 relative z-10">

@@ -127,9 +127,14 @@ body {
   background: #334155;
 }
 
-/* Smooth scroll */
+/* Smooth scroll and snapping */
 html {
   scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
+
+section {
+  scroll-snap-align: start;
 }
 
 /* Selection styling */

@@ -320,7 +320,7 @@ export function DeepDive() {
     }, [scrollYProgress, codeVisible]);
 
     return (
-        <section ref={containerRef} className="h-[250vh] bg-black relative">
+        <section ref={containerRef} className="h-[250vh] bg-black relative snap-start">
             {/* Global CSS animations */}
             <style jsx global>{`
                 @keyframes cursor-blink {
