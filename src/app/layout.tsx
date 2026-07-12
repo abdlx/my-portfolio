@@ -1,25 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, JetBrains_Mono, Inter } from "next/font/google";
+import { Space_Grotesk, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AnimationSettingsProvider } from "@/hooks/useAnimationSettings";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const grotesk = Space_Grotesk({
+  variable: "--font-grotesk",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const instrument = Instrument_Serif({
+  variable: "--font-instrument",
+  weight: "400",
+  style: ["normal", "italic"],
   subsets: ["latin"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -119,7 +116,7 @@ export default function RootLayout({
         <link rel="canonical" href="https://abdlx.com" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jetbrainsMono.variable} ${inter.variable} antialiased bg-black text-white`}
+        className={`${grotesk.variable} ${instrument.variable} ${jetbrainsMono.variable} font-sans antialiased bg-[#070707] text-[#F1F0E9]`}
       >
         <AnimationSettingsProvider>
           {children}

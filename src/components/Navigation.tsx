@@ -1,412 +1,243 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
-import { FloatingDock } from "@/components/ui/floating-dock";
-import { Home, Terminal, FlaskConical, Mail, Cpu, Github, Linkedin, MessageSquare, FileText, Bot, Menu, X, Play, Pause } from "lucide-react";
-import GlassSurface from "./GlassSurface";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
+import React, { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-const AITerminal = dynamic(() => import("./AITerminal").then(mod => mod.AITerminal), { ssr: false });
-const CVWindow = dynamic(() => import("./CVWindow").then(mod => mod.CVWindow), { ssr: false });
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
+import { ArrowUpRight, FileText, Play, Pause } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ScrambleText } from "@/components/fx/ScrambleText";
 import { useUiSounds } from "@/hooks/useUiSounds";
 import { useAnimationSettings } from "@/hooks/useAnimationSettings";
 
-const IconLayoutNavbarCollapse = ({ className }: { className?: string }) => {
-    return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={className}
-        >
-            <path d="M4 6h16" />
-            <path d="M4 12h16" />
-            <path d="M4 18h16" />
-        </svg>
-    );
-};
+const CVWindow = dynamic(() => import("./CVWindow").then((mod) => mod.CVWindow), { ssr: false });
 
-const internalItems = [
-    {
-        title: "Home",
-        href: "#home",
-    },
-    {
-        title: "Systems",
-        href: "#projects",
-    },
-    {
-        title: "Stack",
-        href: "#knowledge-graph",
-    },
-    {
-        title: "Lab",
-        href: "#lab",
-    },
+const CHAPTERS = [
+    { index: "01", title: "HELLO", href: "#home", id: "home" },
+    { index: "02", title: "APPROACH", href: "#approach", id: "approach" },
+    { index: "03", title: "WORK", href: "#work", id: "work" },
+    { index: "04", title: "PROOF", href: "#proof", id: "proof" },
+    { index: "05", title: "ARSENAL", href: "#arsenal", id: "arsenal" },
+    { index: "06", title: "LAB", href: "#lab", id: "lab" },
+    { index: "07", title: "TRANSMIT", href: "#contact", id: "contact" },
 ];
 
-const externalItems: { title: string; icon: React.ReactNode; href: string; onClick?: (e: React.MouseEvent) => void }[] = [
-    {
-        title: "GitHub",
-        icon: <Github className="h-full w-full" />,
-        href: "https://github.com/abdlx/",
-    },
-    {
-        title: "LinkedIn",
-        icon: <Linkedin className="h-full w-full" />,
-        href: "https://www.linkedin.com/in/mirza-abdullah-baig-ai-dev/",
-    },
-    {
-        title: "Contact",
-        icon: <MessageSquare className="h-full w-full" />,
-        href: "mailto:mirzaabdulla300@gmail.com",
-    },
-];
+const EASE: [number, number, number, number] = [0.76, 0, 0.24, 1];
 
 export function Navigation() {
-    const [activeSection, setActiveSection] = useState("#home");
-    const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
     const [isCVOpen, setIsCVOpen] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [activeId, setActiveId] = useState("home");
     const { playHover, playClick } = useUiSounds();
     const { animationsEnabled, toggleAnimations, isHydrated } = useAnimationSettings();
 
+    // global scroll progress bar
+    const { scrollYProgress } = useScroll();
+    const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 40 });
+
+    // active chapter tracking
     useEffect(() => {
-        const observerOptions = {
-            root: null,
-            rootMargin: "-25% 0px -65% 0px",
-            threshold: 0,
-        };
-
-        const handleIntersect = (entries: IntersectionObserverEntry[]) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    setActiveSection(`#${entry.target.id}`);
-                }
-            });
-        };
-
-        const observer = new IntersectionObserver(handleIntersect, observerOptions);
-
-        internalItems.forEach((item) => {
-            const element = document.querySelector(item.href);
-            if (element) observer.observe(element);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) setActiveId(entry.target.id);
+                });
+            },
+            { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
+        );
+        CHAPTERS.forEach((chapter) => {
+            const el = document.getElementById(chapter.id);
+            if (el) observer.observe(el);
         });
-
         return () => observer.disconnect();
     }, []);
 
-    const toggleTerminal = (e: React.MouseEvent) => {
-        console.log("Toggle Terminal Clicked!");
-        e.preventDefault();
-        setIsTerminalOpen(prev => !prev);
-    };
+    // lock scroll while the menu is open
+    useEffect(() => {
+        document.documentElement.style.overflow = menuOpen ? "hidden" : "";
+        return () => {
+            document.documentElement.style.overflow = "";
+        };
+    }, [menuOpen]);
 
-    const toggleCV = (e: React.MouseEvent) => {
-        console.log("Toggle CV Clicked!");
-        e.preventDefault();
-        setIsCVOpen(prev => !prev);
-    };
-
-    const dockItems = useMemo(() => [
-        ...externalItems,
-        {
-            title: "Curriculum Vitae",
-            icon: <FileText className="h-full w-full" />,
-            href: "#",
-            onClick: toggleCV
-        },
-        /* {
-            title: "AI Clone",
-            icon: <Bot className="h-full w-full" />,
-            href: "#",
-            onClick: toggleTerminal
-        } */
-    ], [isTerminalOpen, isCVOpen]);
+    const activeChapter = useMemo(
+        () => CHAPTERS.find((chapter) => chapter.id === activeId) ?? CHAPTERS[0],
+        [activeId]
+    );
 
     return (
         <>
-            {/* Desktop Navigation & Brand */}
-            <div className="fixed top-12 left-1/2 -translate-x-1/2 z-50 hidden md:flex items-center gap-3 will-change-transform max-w-[calc(100vw-2rem)] px-2">
-                {/* Brand Pill */}
-                <GlassSurface
-                    width="auto"
-                    height={46}
-                    borderRadius={23}
-                    className="flex items-center px-6"
-                    brightness={15}
-                    opacity={0.8}
-                    backgroundOpacity={0.4}
+            {/* scroll progress */}
+            <motion.div
+                className="fixed top-0 left-0 right-0 h-[2px] bg-[var(--acid)] origin-left z-[70]"
+                style={{ scaleX: progress }}
+            />
+
+            {/* top HUD bar */}
+            <div className="fixed top-0 inset-x-0 z-[88] flex items-center justify-between px-6 md:px-12 lg:px-20 py-5 md:py-6 pointer-events-none">
+                <a
+                    href="#home"
+                    onMouseEnter={() => playHover()}
+                    onClick={() => {
+                        playClick();
+                        setMenuOpen(false);
+                    }}
+                    className="pointer-events-auto"
                 >
-                    <span className="text-sm font-semibold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-neutral-400">
-                        Abdullah
+                    <ScrambleText
+                        text="ABDULLAH©"
+                        trigger="hover"
+                        className="font-mono text-xs font-bold tracking-[0.22em] text-[var(--ink)]"
+                    />
+                </a>
+
+                <div className="hidden md:block">
+                    <span className="label text-[var(--dim)]">
+                        CH.{activeChapter.index} — {activeChapter.title}
                     </span>
-                </GlassSurface>
+                </div>
 
-                {/* Main Navbar */}
-                <GlassSurface
-                    width="auto"
-                    height={46}
-                    borderRadius={23}
-                    className="flex items-center px-2"
-                    brightness={15}
-                    opacity={0.8}
-                    backgroundOpacity={0.4}
+                <button
+                    onClick={() => {
+                        playClick();
+                        setMenuOpen((prev) => !prev);
+                    }}
+                    onMouseEnter={() => playHover()}
+                    data-cursor={menuOpen ? "CLOSE" : "OPEN"}
+                    className="pointer-events-auto group flex items-center gap-3"
+                    aria-label={menuOpen ? "Close menu" : "Open menu"}
+                    aria-expanded={menuOpen}
                 >
-                    <div className="flex items-center gap-1">
-                        {internalItems.map((item) => (
-                            <Link
-                                key={item.title}
-                                href={item.href}
-                                className={cn(
-                                    "px-4 py-1.5 rounded-full text-xs font-medium tracking-wider uppercase transition-all duration-300",
-                                    activeSection === item.href
-                                        ? "bg-[#818CF8]/20 text-[#818CF8] shadow-[0_0_10px_rgba(129,140,248,0.2)]"
-                                        : "text-neutral-400 hover:text-white"
-                                )}
-                                onMouseEnter={() => playHover()}
-                                onClick={() => playClick()}
-                            >
-                                {item.title}
-                            </Link>
-                        ))}
-                    </div>
-                </GlassSurface>
-
-                {/* Animation Toggle */}
-                {isHydrated && (
-                    <GlassSurface
-                        width="auto"
-                        height={46}
-                        borderRadius={23}
-                        className="flex items-center px-2 gap-1"
-                        brightness={15}
-                        opacity={0.8}
-                        backgroundOpacity={0.4}
-                    >
-                        <button
-                            onClick={() => {
-                                toggleAnimations();
-                                playClick();
-                            }}
-                            onMouseEnter={() => playHover()}
+                    <span className="font-mono text-xs tracking-[0.22em] text-[var(--muted)] group-hover:text-[var(--acid)] transition-colors">
+                        {menuOpen ? "CLOSE" : "MENU"}
+                    </span>
+                    <span className="relative h-3 w-6">
+                        <span
                             className={cn(
-                                "p-2 rounded-full transition-all duration-300",
-                                animationsEnabled ? "text-emerald-400" : "text-neutral-500"
+                                "absolute left-0 top-0 h-px w-full bg-current text-[var(--ink)] group-hover:text-[var(--acid)] transition-all duration-300",
+                                menuOpen && "top-1/2 rotate-45"
                             )}
-                            title={animationsEnabled ? "Disable animations" : "Enable animations"}
-                        >
-                            {animationsEnabled ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                        </button>
-                    </GlassSurface>
-                )}
-            </div>
-
-            {/* Mobile Brand Pill */}
-            <div className={cn(
-                "fixed top-8 left-6 z-50 md:hidden transition-opacity duration-300 will-change-transform",
-                isMobileMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100"
-            )}>
-                <GlassSurface
-                    width="auto"
-                    height={48}
-                    borderRadius={24}
-                    className="flex items-center px-4"
-                    brightness={15}
-                    opacity={0.8}
-                    backgroundOpacity={0.4}
-                >
-                    <span className="text-sm font-semibold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-neutral-400">
-                        Abdullah
+                        />
+                        <span
+                            className={cn(
+                                "absolute left-0 bottom-0 h-px w-full bg-current text-[var(--ink)] group-hover:text-[var(--acid)] transition-all duration-300",
+                                menuOpen && "bottom-auto top-1/2 -rotate-45"
+                            )}
+                        />
                     </span>
-                </GlassSurface>
+                </button>
             </div>
 
-            {/* Mobile Consolidated Menu */}
-            <div className="fixed top-8 right-6 z-50 md:hidden max-w-[calc(100vw-10rem)]">
-                <div className="flex flex-col items-end gap-4 relative">
-                    {/* Top Row: Nav Links + Animation Toggle + Hamburger */}
-                    <div className="flex items-center gap-3">
-                        {/* Animation Toggle - Left of Hamburger */}
-                        {isHydrated && (
-                            <button
-                                onClick={() => {
-                                    toggleAnimations();
-                                    playClick();
-                                }}
-                                onMouseEnter={() => playHover()}
-                                className={cn(
-                                    "relative z-[60] flex items-center justify-center h-12 w-12 rounded-full overflow-hidden transition-all duration-300 active:scale-95",
-                                    isMobileMenuOpen ? "opacity-0 pointer-events-none" : "opacity-100"
-                                )}
-                            >
-                                <GlassSurface
-                                    width={48}
-                                    height={48}
-                                    borderRadius={24}
-                                    className="flex items-center justify-center p-0"
-                                    brightness={15}
-                                    opacity={0.8}
-                                    backgroundOpacity={0.4}
+            {/* fullscreen menu */}
+            <AnimatePresence>
+                {menuOpen && (
+                    <motion.div
+                        key="menu"
+                        initial={{ y: "-100%" }}
+                        animate={{ y: 0 }}
+                        exit={{ y: "-100%" }}
+                        transition={{ duration: 0.7, ease: EASE }}
+                        className="fixed inset-0 z-[85] bg-[#070707] flex flex-col justify-between px-6 md:px-12 lg:px-20 pt-28 pb-8 overflow-y-auto"
+                    >
+                        <nav className="flex flex-col">
+                            {CHAPTERS.map((chapter, i) => (
+                                <motion.div
+                                    key={chapter.id}
+                                    initial={{ y: 48, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    exit={{ y: 24, opacity: 0, transition: { delay: 0 } }}
+                                    transition={{ delay: 0.25 + i * 0.06, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                                 >
-                                    <div className={cn(
-                                        "transition-colors duration-300",
-                                        animationsEnabled ? "text-emerald-400" : "text-neutral-500"
-                                    )}>
-                                        {animationsEnabled ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                                    </div>
-                                </GlassSurface>
-                            </button>
-                        )}
-
-                        <AnimatePresence>
-                            {isMobileMenuOpen && (
-                                <motion.div 
-                                    initial={{ opacity: 0, x: 20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: 20 }}
-                                    className="flex items-center gap-1 bg-neutral-900/40 backdrop-blur-md rounded-full px-3 py-1.5 border border-white/5 shadow-2xl mr-1"
-                                >
-                                    {internalItems.map((item) => (
-                                        <Link
-                                            key={item.title}
-                                            href={item.href}
-                                            onMouseEnter={() => playHover()}
-                                            onClick={() => {
-                                                playClick();
-                                                setIsMobileMenuOpen(false);
-                                            }}
+                                    <a
+                                        href={chapter.href}
+                                        onMouseEnter={() => playHover()}
+                                        onClick={() => {
+                                            playClick();
+                                            setMenuOpen(false);
+                                        }}
+                                        className="group flex items-baseline gap-5 md:gap-8 py-2.5 md:py-3 hairline-b border-[var(--line)]"
+                                    >
+                                        <span className="font-mono text-xs tabular-nums text-[var(--dim)] group-hover:text-[var(--acid)] transition-colors">
+                                            {chapter.index}
+                                        </span>
+                                        <span
                                             className={cn(
-                                                "px-3 py-1 rounded-full text-[10px] font-medium tracking-wider uppercase transition-all duration-300",
-                                                activeSection === item.href
-                                                    ? "bg-[#818CF8]/20 text-[#818CF8]"
-                                                    : "text-neutral-400"
+                                                "font-display font-bold text-4xl md:text-6xl lg:text-7xl leading-none tracking-tight transition-all duration-300 group-hover:translate-x-3 group-hover:text-[var(--acid)]",
+                                                activeId === chapter.id ? "text-[var(--acid)]" : "text-[var(--ink)]"
                                             )}
                                         >
-                                            {item.title}
-                                        </Link>
-                                    ))}
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
-                        <motion.button
-                            onClick={() => {
-                                playClick();
-                                setIsMobileMenuOpen(!isMobileMenuOpen);
-                            }}
-                            onMouseEnter={() => playHover()}
-                            className="relative z-[60] flex items-center justify-center h-12 w-12 rounded-full overflow-hidden"
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            <GlassSurface
-                                width={48}
-                                height={48}
-                                borderRadius={24}
-                                className="flex items-center justify-center p-0"
-                                brightness={15}
-                                opacity={0.8}
-                                backgroundOpacity={0.4}
-                            >
-                                <AnimatePresence mode="wait">
-                                    {isMobileMenuOpen ? (
-                                        <motion.div
-                                            key="close"
-                                            initial={{ opacity: 0, rotate: -90 }}
-                                            animate={{ opacity: 1, rotate: 0 }}
-                                            exit={{ opacity: 0, rotate: 90 }}
-                                            transition={{ duration: 0.2 }}
-                                        >
-                                            <X className="h-5 w-5 text-neutral-300" />
-                                        </motion.div>
-                                    ) : (
-                                        <motion.div
-                                            key="menu"
-                                            initial={{ opacity: 0, rotate: 90 }}
-                                            animate={{ opacity: 1, rotate: 0 }}
-                                            exit={{ opacity: 0, rotate: -90 }}
-                                            transition={{ duration: 0.2 }}
-                                        >
-                                            <IconLayoutNavbarCollapse className="h-5 w-5 text-neutral-300" />
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </GlassSurface>
-                        </motion.button>
-                    </div>
-
-                    {/* Bottom Area: Dock Items */}
-                    <AnimatePresence>
-                        {isMobileMenuOpen && (
-                            <div className="flex flex-col gap-3 pr-1">
-                                {dockItems.map((item, idx) => (
-                                    <motion.div
-                                        key={item.title}
-                                        initial={{ opacity: 0, y: -20, scale: 0.8 }}
-                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        exit={{ opacity: 0, y: -20, scale: 0.8 }}
-                                        transition={{ 
-                                            delay: idx * 0.05,
-                                            type: "spring",
-                                            stiffness: 300,
-                                            damping: 20
-                                        }}
-                                    >
-                                        {item.onClick ? (
-                                            <button
-                                                onClick={(e) => {
-                                                    playClick();
-                                                    item.onClick?.(e);
-                                                    setIsMobileMenuOpen(false);
-                                                }}
-                                                onMouseEnter={() => playHover()}
-                                                className="h-10 w-10 rounded-full flex items-center justify-center bg-neutral-900/80 backdrop-blur-md border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)] active:scale-90 transition-transform"
-                                            >
-                                                <div className="h-4 w-4 text-neutral-200">
-                                                    {item.icon}
-                                                </div>
-                                            </button>
-                                        ) : (
-                                            <Link
-                                                href={item.href}
-                                                onMouseEnter={() => playHover()}
-                                                onClick={() => {
-                                                    playClick();
-                                                    setIsMobileMenuOpen(false);
-                                                }}
-                                                className="h-10 w-10 rounded-full flex items-center justify-center bg-neutral-900/80 backdrop-blur-md border border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.5)] active:scale-90 transition-transform"
-                                            >
-                                                <div className="h-4 w-4 text-neutral-200">
-                                                    {item.icon}
-                                                </div>
-                                            </Link>
+                                            {chapter.title}
+                                        </span>
+                                        {activeId === chapter.id && (
+                                            <span className="label text-[var(--dim)] hidden md:block">← YOU ARE HERE</span>
                                         )}
-                                    </motion.div>
-                                ))}
+                                    </a>
+                                </motion.div>
+                            ))}
+                        </nav>
+
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ delay: 0.6, duration: 0.5 }}
+                            className="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-8"
+                        >
+                            <div className="flex items-center gap-6">
+                                <button
+                                    onClick={() => {
+                                        playClick();
+                                        setIsCVOpen(true);
+                                        setMenuOpen(false);
+                                    }}
+                                    onMouseEnter={() => playHover()}
+                                    data-cursor="CV"
+                                    className="label text-[var(--muted)] hover:text-[var(--acid)] transition-colors flex items-center gap-2"
+                                >
+                                    <FileText className="h-3.5 w-3.5" /> CURRICULUM VITAE
+                                </button>
+                                {isHydrated && (
+                                    <button
+                                        onClick={() => {
+                                            playClick();
+                                            toggleAnimations();
+                                        }}
+                                        onMouseEnter={() => playHover()}
+                                        className="label text-[var(--muted)] hover:text-[var(--acid)] transition-colors flex items-center gap-2"
+                                    >
+                                        {animationsEnabled ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+                                        MOTION: {animationsEnabled ? "ON" : "OFF"}
+                                    </button>
+                                )}
                             </div>
-                        )}
-                    </AnimatePresence>
-                </div>
-            </div>
 
-            {/* AI Terminal Window */}
-            <AITerminal isOpen={isTerminalOpen} setIsOpen={setIsTerminalOpen} />
+                            <div className="flex items-center gap-6">
+                                <a
+                                    href="https://github.com/abdlx"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onMouseEnter={() => playHover()}
+                                    className="label text-[var(--muted)] hover:text-[var(--acid)] transition-colors flex items-center gap-1"
+                                >
+                                    GITHUB <ArrowUpRight className="h-3 w-3" />
+                                </a>
+                                <a
+                                    href="https://www.linkedin.com/in/mirza-abdullah-baig-ai-dev/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onMouseEnter={() => playHover()}
+                                    className="label text-[var(--muted)] hover:text-[var(--acid)] transition-colors flex items-center gap-1"
+                                >
+                                    LINKEDIN <ArrowUpRight className="h-3 w-3" />
+                                </a>
+                                <span className="label text-[var(--dim)] hidden md:block">V3.0 — 2026</span>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
-            {/* CV Preview Window */}
+            {/* CV window */}
             <CVWindow isOpen={isCVOpen} setIsOpen={setIsCVOpen} />
-
-            {/* Bottom External Dock */}
-            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 hidden md:block">
-                <FloatingDock items={dockItems} />
-            </div>
         </>
     );
 }

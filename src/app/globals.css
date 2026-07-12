@@ -1,89 +1,244 @@
 @import "tailwindcss";
 
+/* ============================================================
+   SIGNAL — design system
+   One canvas. One accent. Hairlines. Big type. Mono HUD.
+   ============================================================ */
+
 :root {
-  --background: #000000;
-  --foreground: #ededed;
+  --bg: #070707;
+  --panel: #0b0b0c;
+  --ink: #f1f0e9;
+  --muted: #8c8c82;
+  --dim: #4b4b44;
+  --line: rgba(241, 240, 233, 0.09);
+  --acid: #cbff4a;
+  --signal: #ff5b2e;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: var(--ink);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-dim: var(--dim);
+  --color-acid: var(--acid);
+  --color-signal: var(--signal);
+  --color-panel: var(--panel);
+  --color-line: rgba(241, 240, 233, 0.09);
 
-  /* Spotlight animation */
+  --font-sans: var(--font-grotesk);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-serif: var(--font-instrument);
+
+  /* legacy keyframe hooks (kept for ui/* components still in tree) */
   --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
-
-  /* Shimmer button animations */
   --animate-shimmer-slide: shimmer-slide 8s infinite;
   --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
-
-  /* Scroll animation for infinite cards */
   --animate-scroll: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
 }
 
-@keyframes spotlight {
-  0% {
-    opacity: 0;
-    transform: translate(-72%, -62%) scale(0.5);
-  }
+html,
+body {
+  background: var(--bg);
+  color: var(--ink);
+  width: 100%;
+  /* clip (not hidden) so off-screen watermarks are trimmed WITHOUT
+     turning the body into a scroll container — hidden breaks position: sticky */
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
 
-  100% {
-    opacity: 1;
-    transform: translate(-50%, -40%) scale(1);
+html {
+  scroll-behavior: auto; /* Lenis owns scrolling */
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+/* Custom cursor takes over on fine pointers once mounted */
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+
+/* ============================================================
+   Typography utilities
+   ============================================================ */
+
+.font-display {
+  font-family: var(--font-grotesk), sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.font-serif-it {
+  font-family: var(--font-instrument), serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.label {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.label-lg {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* Outlined watermark type */
+.text-stroke {
+  -webkit-text-stroke: 1px rgba(241, 240, 233, 0.14);
+  color: transparent;
+}
+
+.text-stroke-acid {
+  -webkit-text-stroke: 1px rgba(203, 255, 74, 0.4);
+  color: transparent;
+}
+
+/* ============================================================
+   Surfaces & chrome
+   ============================================================ */
+
+.hairline {
+  border: 1px solid var(--line);
+}
+
+.hairline-t {
+  border-top: 1px solid var(--line);
+}
+
+.hairline-b {
+  border-bottom: 1px solid var(--line);
+}
+
+/* Fixed film grain overlay */
+.grain {
+  position: fixed;
+  inset: -100%;
+  z-index: 95;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  opacity: 0.05;
+  animation: grain-shift 0.9s steps(4) infinite;
+}
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, 3%); }
+  50% { transform: translate(3%, -2%); }
+  75% { transform: translate(-3%, -3%); }
+  100% { transform: translate(2%, 2%); }
+}
+
+/* Editorial column hairlines */
+.page-columns {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .page-columns {
+    display: block;
   }
+}
+
+.page-columns > span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(241, 240, 233, 0.035);
+}
+
+/* ============================================================
+   Motion primitives
+   ============================================================ */
+
+@keyframes ticker-x {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-x var(--ticker-duration, 28s) linear infinite;
+}
+
+.ticker-track.reverse {
+  animation-direction: reverse;
+}
+
+.ticker-paused:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.4; }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* legacy keyframes for ui/* components still present */
+@keyframes spotlight {
+  0% { opacity: 0; transform: translate(-72%, -62%) scale(0.5); }
+  100% { opacity: 1; transform: translate(-50%, -40%) scale(1); }
 }
 
 @keyframes shimmer-slide {
-  to {
-    transform: translate(calc(100cqw - 100%), 0);
-  }
+  to { transform: translate(calc(100cqw - 100%), 0); }
 }
 
 @keyframes spin-around {
-  0% {
-    transform: translateZ(0) rotate(0);
-  }
-
-  15%,
-  35% {
-    transform: translateZ(0) rotate(90deg);
-  }
-
-  65%,
-  85% {
-    transform: translateZ(0) rotate(270deg);
-  }
-
-  100% {
-    transform: translateZ(0) rotate(360deg);
-  }
+  0% { transform: translateZ(0) rotate(0); }
+  15%, 35% { transform: translateZ(0) rotate(90deg); }
+  65%, 85% { transform: translateZ(0) rotate(270deg); }
+  100% { transform: translateZ(0) rotate(360deg); }
 }
 
 @keyframes scroll {
-  to {
-    transform: translate(calc(-50% - 0.5rem));
-  }
+  to { transform: translate(calc(-50% - 0.5rem)); }
 }
 
 @keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(calc(-100% - var(--gap)));
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-100% - var(--gap))); }
 }
 
 @keyframes marquee-vertical {
-  from {
-    transform: translateY(0);
-  }
-
-  to {
-    transform: translateY(calc(-100% - var(--gap)));
-  }
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(-100% - var(--gap))); }
 }
 
 .animate-marquee {
@@ -94,51 +249,36 @@
   animation: marquee-vertical var(--duration) linear infinite;
 }
 
-html,
-body {
-  @apply bg-black text-white antialiased;
-  background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
-  background-size: 40px 40px;
-  overflow-x: hidden;
-  width: 100%;
-}
+/* ============================================================
+   Chrome details
+   ============================================================ */
 
-@layer components {
-  .heading-highlight {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#2DD4BF] via-[#3B82F6] to-[#818CF8];
-  }
-}
-
-/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: var(--bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  background: #2a2a26;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: var(--acid);
 }
 
-/* Smooth scroll and snapping */
-html {
-  scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
-}
-
-section {
-  scroll-snap-align: start;
-}
-
-/* Selection styling */
 ::selection {
-  background-color: rgba(99, 102, 241, 0.3);
-  color: #ffffff;
+  background-color: var(--acid);
+  color: #070707;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain,
+  .ticker-track,
+  .blink,
+  .pulse-dot {
+    animation: none !important;
+  }
 }

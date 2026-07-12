@@ -1,10 +1,8 @@
 "use client";
 import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ExternalLink, Github, Code2, Layers, Globe, Zap, BarChart3, Target } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { X, Github, ArrowUpRight, Volume2, VolumeX, ShieldAlert } from "lucide-react";
 import { useUiSounds } from "@/hooks/useUiSounds";
-import { Play, Pause, Volume2, VolumeX, Maximize2, Activity, ShieldAlert, Cpu } from "lucide-react";
 
 interface ImpactMetric {
     label: string;
@@ -22,6 +20,7 @@ interface Project {
     impactMetrics?: ImpactMetric[];
     kpiHighlight?: string;
     isUnderDevelopment?: boolean;
+    categories?: string[];
 }
 
 interface ProjectModalProps {
@@ -33,167 +32,144 @@ interface ProjectModalProps {
 export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
     const { playHover, playClick } = useUiSounds();
     const [isMuted, setIsMuted] = React.useState(true);
-    const [isPlaying, setIsPlaying] = React.useState(true);
 
     // Prevent scrolling when modal is open
     useEffect(() => {
         if (isOpen) {
-            document.body.style.overflow = "hidden";
+            document.documentElement.style.overflow = "hidden";
         } else {
-            document.body.style.overflow = "unset";
+            document.documentElement.style.overflow = "";
         }
         return () => {
-            document.body.style.overflow = "unset";
+            document.documentElement.style.overflow = "";
         };
     }, [isOpen]);
 
+    // esc to close
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") onClose();
+        };
+        if (isOpen) window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [isOpen, onClose]);
+
     if (!project) return null;
-
-    const TerminalVideoPlayer = ({ videoUrl, title }: { videoUrl: string; title: string }) => {
-        const videoRef = React.useRef<HTMLVideoElement>(null);
-
-        useEffect(() => {
-            if (videoRef.current) {
-                videoRef.current.muted = isMuted;
-            }
-        }, [isMuted]);
-
-        return (
-            <div className="relative w-full h-full bg-black group">
-                <video
-                    ref={videoRef}
-                    src={videoUrl}
-                    autoPlay
-                    loop
-                    muted={isMuted}
-                    playsInline
-                    className="w-full h-full object-cover"
-                />
-
-                {/* Minimalist Audio Toggle */}
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setIsMuted(!isMuted);
-                        playClick();
-                    }}
-                    onMouseEnter={() => playHover()}
-                    className="absolute bottom-4 right-4 z-50 p-2.5 rounded-full bg-black/40 border border-white/10 text-white/70 hover:text-white hover:bg-black/60 transition-all backdrop-blur-sm opacity-0 group-hover:opacity-100"
-                >
-                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                </button>
-            </div>
-        );
-    };
 
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
+                <div className="fixed inset-0 z-[96] flex items-center justify-center p-3 md:p-8">
                     {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                        className="absolute inset-0 bg-[#070707]/85 backdrop-blur-md"
                     />
 
-                    {/* Modal Content */}
+                    {/* Dossier */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                        className="relative w-full max-w-[95vw] lg:max-w-7xl h-full max-h-[95vh] overflow-hidden bg-neutral-950 border border-neutral-800 rounded-2xl shadow-2xl flex flex-col"
+                        initial={{ opacity: 0, y: 48 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 48 }}
+                        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                        className="relative w-full max-w-6xl h-full max-h-[92vh] overflow-hidden bg-[#0b0b0c] hairline flex flex-col"
                     >
-                        {/* Close Button */}
-                        <button
-                            onClick={() => {
-                                playClick();
-                                onClose();
-                            }}
-                            onMouseEnter={() => playHover()}
-                            className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/50 border border-white/10 text-white hover:bg-neutral-800 transition-colors"
-                        >
-                            <X className="w-5 h-5" />
-                        </button>
+                        {/* header bar */}
+                        <div className="flex items-center justify-between px-5 md:px-8 py-4 hairline-b shrink-0">
+                            <span className="label text-[var(--muted)]">
+                                CASE STUDY — {project.categories?.[0]?.toUpperCase() ?? "SYSTEM"}
+                            </span>
+                            <button
+                                onClick={() => {
+                                    playClick();
+                                    onClose();
+                                }}
+                                onMouseEnter={() => playHover()}
+                                data-cursor="CLOSE"
+                                aria-label="Close case study"
+                                className="p-2 hairline text-[var(--muted)] hover:text-[#070707] hover:bg-[var(--acid)] hover:border-[var(--acid)] transition-colors"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
 
                         {/* Scrollable Area */}
-                        <div className="overflow-y-auto custom-scrollbar">
-                            {/* Hero Image */}
-                            <div className="relative w-full aspect-video md:aspect-[21/9] overflow-hidden bg-black">
+                        <div className="overflow-y-auto" data-lenis-prevent>
+                            {/* media */}
+                            <div className="relative w-full aspect-video md:aspect-[21/9] overflow-hidden bg-[#070707] group">
                                 {project.videoUrl ? (
-                                    <TerminalVideoPlayer videoUrl={project.videoUrl} title={project.title} />
+                                    <>
+                                        <video
+                                            src={project.videoUrl}
+                                            autoPlay
+                                            loop
+                                            muted={isMuted}
+                                            playsInline
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setIsMuted(!isMuted);
+                                                playClick();
+                                            }}
+                                            onMouseEnter={() => playHover()}
+                                            aria-label={isMuted ? "Unmute video" : "Mute video"}
+                                            className="absolute bottom-4 right-4 z-10 p-2.5 hairline bg-[#070707]/60 text-[var(--muted)] hover:text-[var(--acid)] transition-colors backdrop-blur-sm opacity-0 group-hover:opacity-100"
+                                        >
+                                            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                                        </button>
+                                    </>
                                 ) : (
-                                    <div className="w-full h-full flex flex-col items-center justify-center text-neutral-800 font-mono bg-neutral-950/50 relative">
-                                        <ShieldAlert className="w-12 h-12 mb-4 opacity-20" />
-                                        <span className="tracking-[0.3em] opacity-40 animate-pulse">[ SIGNAL_LOST ]</span>
-                                        <div className="absolute inset-0 border border-white/5 m-4" />
+                                    <div className="w-full h-full flex flex-col items-center justify-center text-[var(--dim)] font-mono relative">
+                                        <ShieldAlert className="w-10 h-10 mb-4 opacity-30" />
+                                        <span className="tracking-[0.3em] opacity-50 animate-pulse text-xs">[ SIGNAL_LOST ]</span>
                                     </div>
                                 )}
-                                <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/10 to-transparent pointer-events-none z-40" />
-
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0c] via-transparent to-transparent pointer-events-none" />
                             </div>
 
-                            {/* Content */}
-                            <div className="p-8 md:p-12 space-y-12">
-                                {/* Project Header Info - Moved out of overlay */}
-                                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/5 pb-12">
-                                    <div className="space-y-4">
-                                        <motion.h2
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            className="text-3xl md:text-6xl font-bold text-white tracking-tight"
-                                        >
+                            {/* content */}
+                            <div className="p-5 md:p-10 space-y-10">
+                                {/* title row */}
+                                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 hairline-b pb-8">
+                                    <div className="space-y-4 min-w-0">
+                                        <h2 className="font-display font-bold text-4xl md:text-6xl leading-[0.95] tracking-tight text-[var(--ink)]">
                                             {project.title}
-                                        </motion.h2>
-                                        <motion.div
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: 0.1 }}
-                                            className="flex flex-wrap gap-2"
-                                        >
-                                            {project.stack.map((tech) => (
-                                                <span
-                                                    key={tech}
-                                                    className="px-2 py-1 rounded-md text-[10px] uppercase tracking-wider font-bold bg-white/5 text-neutral-400 border border-white/10"
-                                                >
-                                                    {tech}
-                                                </span>
-                                            ))}
-                                        </motion.div>
+                                        </h2>
+                                        {project.isUnderDevelopment && (
+                                            <span className="label text-[var(--signal)] flex items-center gap-2">
+                                                <span className="h-[5px] w-[5px] rounded-full bg-[var(--signal)] pulse-dot" />
+                                                IN ACTIVE DEVELOPMENT
+                                            </span>
+                                        )}
                                     </div>
-
                                     {project.kpiHighlight && (
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.8 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            transition={{ delay: 0.2 }}
-                                            className="flex flex-col items-end"
-                                        >
-                                            <div className="px-6 py-3 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 flex flex-col items-end backdrop-blur-sm">
-                                                <span className="text-[10px] uppercase tracking-[0.2em] text-emerald-500/60 font-mono mb-1">Key Impact</span>
-                                                <span className="text-2xl md:text-3xl font-bold text-white whitespace-nowrap tabular-nums">{project.kpiHighlight}</span>
-                                            </div>
-                                        </motion.div>
+                                        <div className="shrink-0 bg-[var(--acid)] text-[#070707] px-5 py-3">
+                                            <span className="block font-mono text-[9px] font-bold uppercase tracking-[0.2em] mb-1 opacity-70">
+                                                Key impact
+                                            </span>
+                                            <span className="font-display font-bold text-xl md:text-2xl whitespace-nowrap tabular-nums">
+                                                {project.kpiHighlight}
+                                            </span>
+                                        </div>
                                     )}
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-neutral-300">
-                                    {/* Left Column: Description */}
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                                    {/* left — deep dive */}
                                     <div className="md:col-span-2 space-y-8">
                                         <section>
-                                            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                                                <Code2 className="w-5 h-5 text-indigo-500" />
-                                                Engineering Deep Dive
-                                            </h3>
-                                            <p className="text-neutral-400 leading-relaxed whitespace-pre-wrap font-sans text-lg">
+                                            <h3 className="label text-[var(--acid)] mb-5">ENGINEERING DEEP DIVE</h3>
+                                            <p className="text-[var(--muted)] leading-relaxed whitespace-pre-wrap text-base md:text-lg">
                                                 {project.longDescription || project.description}
                                             </p>
                                         </section>
 
-
-                                        <div className="pt-4 flex flex-wrap gap-4 items-center">
+                                        <div className="pt-2 flex flex-wrap gap-3 items-center">
                                             {project.liveUrl && (
                                                 <a
                                                     href={project.liveUrl}
@@ -201,11 +177,11 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                                     rel="noopener noreferrer"
                                                     onMouseEnter={() => playHover()}
                                                     onClick={() => playClick()}
-                                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-black font-semibold hover:bg-neutral-200 transition-all group"
+                                                    data-cursor="VISIT"
+                                                    className="group inline-flex items-center gap-2 bg-[var(--acid)] text-[#070707] font-mono text-xs font-bold uppercase tracking-[0.16em] px-6 py-4 hover:bg-[var(--ink)] transition-colors"
                                                 >
-                                                    <Globe className="w-4 h-4" />
-                                                    Explore Product
-                                                    <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                                    Explore product
+                                                    <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                                                 </a>
                                             )}
                                             {project.githubUrl && (
@@ -215,60 +191,48 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                                     rel="noopener noreferrer"
                                                     onMouseEnter={() => playHover()}
                                                     onClick={() => playClick()}
-                                                    className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 text-white font-medium transition-all"
+                                                    className="inline-flex items-center gap-2 hairline text-[var(--ink)] font-mono text-xs uppercase tracking-[0.16em] px-6 py-4 hover:border-[var(--acid)] hover:text-[var(--acid)] transition-colors"
                                                 >
                                                     <Github className="w-4 h-4" />
-                                                    View Architecture
+                                                    View architecture
                                                 </a>
-                                            )}
-                                            {project.isUnderDevelopment && (
-                                                <div className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500/5 border border-amber-500/20 text-amber-500 font-mono text-sm tracking-wider uppercase">
-                                                    <Zap className="w-4 h-4" />
-                                                    Under Development
-                                                </div>
                                             )}
                                         </div>
                                     </div>
 
-                                    {/* Right Column: Meta Info */}
-                                    <div className="space-y-6">
-                                        <div className="p-6 rounded-2xl bg-indigo-500/5 border border-indigo-500/10 space-y-6">
-                                            <div>
-                                                <h4 className="text-xs font-mono uppercase tracking-widest text-indigo-400 mb-4 flex items-center gap-2">
-                                                    <Zap className="w-3.5 h-3.5" />
-                                                    Tech Stack
-                                                </h4>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {project.stack.map((tech) => (
-                                                        <span key={tech} className="text-[11px] font-mono text-neutral-400">
-                                                            // {tech}
-                                                        </span>
+                                    {/* right — spec sheet */}
+                                    <div className="space-y-px">
+                                        {project.impactMetrics && project.impactMetrics.length > 0 && (
+                                            <div className="hairline p-6 mb-4">
+                                                <h4 className="label text-[var(--acid)] mb-5">MEASURED IMPACT</h4>
+                                                <div className="space-y-4">
+                                                    {project.impactMetrics.map((metric) => (
+                                                        <div key={metric.label} className="flex items-baseline justify-between gap-4">
+                                                            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--dim)]">
+                                                                {metric.label}
+                                                            </span>
+                                                            <span className="font-display font-bold text-sm text-[var(--ink)] text-right">
+                                                                {metric.value}
+                                                            </span>
+                                                        </div>
                                                     ))}
                                                 </div>
                                             </div>
+                                        )}
 
-                                            <div className="pt-4 border-t border-white/5">
-                                                <h4 className="text-xs font-mono uppercase tracking-widest text-emerald-400 mb-4 flex items-center gap-2">
-                                                    <Target className="w-3.5 h-3.5" />
-                                                    Core Objectives
-                                                </h4>
-                                                <ul className="space-y-2">
-                                                    <li className="text-xs text-neutral-500 flex items-start gap-2">
-                                                        <span className="text-emerald-500 mt-0.5">▹</span>
-                                                        Scalable Performance
-                                                    </li>
-                                                    <li className="text-xs text-neutral-500 flex items-start gap-2">
-                                                        <span className="text-emerald-500 mt-0.5">▹</span>
-                                                        AI-First Architecture
-                                                    </li>
-                                                    <li className="text-xs text-neutral-500 flex items-start gap-2">
-                                                        <span className="text-emerald-500 mt-0.5">▹</span>
-                                                        High Reliability Swarms
-                                                    </li>
-                                                </ul>
+                                        <div className="hairline p-6">
+                                            <h4 className="label text-[var(--acid)] mb-5">TECH STACK</h4>
+                                            <div className="flex flex-wrap gap-2">
+                                                {project.stack.map((tech) => (
+                                                    <span
+                                                        key={tech}
+                                                        className="font-mono text-[10px] uppercase tracking-[0.1em] hairline text-[var(--muted)] px-2.5 py-1.5"
+                                                    >
+                                                        {tech}
+                                                    </span>
+                                                ))}
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
