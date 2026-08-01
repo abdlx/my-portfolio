@@ -65,14 +65,20 @@ export function ScrambleText({
     }, [text, speed, delay]);
 
     useEffect(() => {
-        setDisplay(text);
-        playedRef.current = false;
+        const frame = requestAnimationFrame(() => {
+            setDisplay(text);
+            playedRef.current = false;
+        });
+        return () => cancelAnimationFrame(frame);
     }, [text]);
 
     useEffect(() => {
         if (trigger === "mount") {
-            run();
-            return () => cancelAnimationFrame(frameRef.current);
+            const frame = requestAnimationFrame(run);
+            return () => {
+                cancelAnimationFrame(frame);
+                cancelAnimationFrame(frameRef.current);
+            };
         }
         if (trigger === "inview") {
             const el = elRef.current;

@@ -14,6 +14,10 @@
   --line: rgba(241, 240, 233, 0.09);
   --acid: #cbff4a;
   --signal: #ff5b2e;
+  --cyan: #49d7ff;
+  --rose: #ff4f87;
+  --gold: #ffd166;
+  --violet: #9b8cff;
 }
 
 @theme inline {
@@ -24,6 +28,10 @@
   --color-dim: var(--dim);
   --color-acid: var(--acid);
   --color-signal: var(--signal);
+  --color-cyan: var(--cyan);
+  --color-rose: var(--rose);
+  --color-gold: var(--gold);
+  --color-violet: var(--violet);
   --color-panel: var(--panel);
   --color-line: rgba(241, 240, 233, 0.09);
 
@@ -74,14 +82,14 @@ html.has-cursor * {
 
 .font-display {
   font-family: var(--font-grotesk), sans-serif;
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
 }
 
 .font-serif-it {
   font-family: var(--font-instrument), serif;
   font-style: italic;
   font-weight: 400;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 .label {
@@ -208,6 +216,67 @@ html.has-cursor * {
 
 .pulse-dot {
   animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Pointer-reactive control surface used by the pinned signal chapter. */
+.signal-field {
+  --mx: 50%;
+  --my: 50%;
+  isolation: isolate;
+}
+
+.signal-field::before,
+.signal-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.signal-field::before {
+  z-index: 0;
+  background:
+    linear-gradient(rgba(241, 240, 233, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(241, 240, 233, 0.045) 1px, transparent 1px),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 72px,
+      rgba(203, 255, 74, 0.055) 73px,
+      transparent 74px
+    );
+  background-size: 32px 32px, 32px 32px, auto;
+  mask-image: radial-gradient(circle at center, #000 0%, transparent 74%);
+}
+
+.signal-field::after {
+  z-index: 1;
+  background:
+    radial-gradient(circle at var(--mx) var(--my), rgba(73, 215, 255, 0.24), transparent 26%),
+    radial-gradient(circle at 50% 50%, rgba(203, 255, 74, 0.14), transparent 42%);
+  mix-blend-mode: screen;
+}
+
+.project-slide-surface {
+  --mx: 50%;
+  --my: 50%;
+}
+
+.project-slide-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at var(--mx) var(--my), rgba(203, 255, 74, 0.22), transparent 24%),
+    linear-gradient(135deg, transparent 0%, rgba(73, 215, 255, 0.12) 50%, transparent 100%);
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 400ms ease;
+}
+
+.project-slide-surface:hover::after {
+  opacity: 1;
 }
 
 /* legacy keyframes for ui/* components still present */

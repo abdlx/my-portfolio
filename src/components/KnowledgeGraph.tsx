@@ -84,7 +84,7 @@ function DomainRow({
                     </span>
                     <span
                         className={cn(
-                            "font-display font-bold text-3xl md:text-6xl leading-none tracking-tight truncate",
+                            "font-display font-bold text-3xl md:text-6xl leading-none tracking-normal truncate",
                             active ? "text-[#070707]" : "text-[var(--ink)]"
                         )}
                     >

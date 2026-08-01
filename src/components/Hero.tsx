@@ -115,7 +115,7 @@ export function Hero() {
                 </motion.a>
 
                 {/* headline */}
-                <h1 className="font-display font-bold leading-[0.92] tracking-[-0.04em] text-[var(--ink)] text-[15.5vw] md:text-[11.5vw]">
+                <h1 className="font-display font-bold leading-[0.94] text-[var(--ink)] text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[11rem]">
                     <span className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
                         <motion.span className="block" {...lineReveal(0.1)}>
                             <LiveWord word="I" />&nbsp;<LiveWord word="BUILD" />

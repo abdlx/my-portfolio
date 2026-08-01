@@ -7,6 +7,23 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useUiSounds } from "@/hooks/useUiSounds";
 
+type ChatPart = {
+    type: string;
+    text?: string;
+};
+
+type ChatMessage = {
+    id: string;
+    role: "user" | "assistant" | string;
+    parts?: ChatPart[];
+};
+
+type ChatApi = {
+    messages: ChatMessage[];
+    sendMessage: (message: { text: string }) => Promise<void> | void;
+    status: string;
+};
+
 export function AITerminal({
     isOpen,
     setIsOpen
@@ -17,7 +34,7 @@ export function AITerminal({
     console.log("AITerminal isOpen:", isOpen);
     const { playHover, playClick, playNotify } = useUiSounds();
     const [input, setInput] = useState("");
-    const { messages, sendMessage, status, stop } = useChat() as any;
+    const { messages, sendMessage, status } = useChat() as unknown as ChatApi;
     const isLoading = status !== 'ready';
     const handleSubmit = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
@@ -115,7 +132,7 @@ export function AITerminal({
                                         <div className="space-y-2">
                                             <h3 className="text-white font-semibold text-lg">System Initialized</h3>
                                             <p className="text-neutral-400 text-sm leading-relaxed max-w-md">
-                                                Abdullah's neural twin is online. Synthesized from repositories, publications, and strategic frameworks.
+                                                Abdullah&apos;s neural twin is online. Synthesized from repositories, publications, and strategic frameworks.
                                             </p>
                                         </div>
                                     </div>
@@ -139,7 +156,7 @@ export function AITerminal({
                                 </div>
                             )}
 
-                            {(messages as any[]).map((m: any) => (
+                            {messages.map((m) => (
                                 <div key={m.id} className={cn(
                                     "flex gap-4",
                                     m.role === 'user' ? "flex-row-reverse" : "flex-row"
@@ -163,7 +180,7 @@ export function AITerminal({
                                         {m.role === 'assistant' && (
                                             <span className="text-indigo-400/40 block mb-2 text-[10px] font-mono tracking-tighter uppercase">Processor Output //</span>
                                         )}
-                                        {m.parts?.map((p: any, i: number) => {
+                                        {m.parts?.map((p, i) => {
                                             if (p.type === 'text') return <span key={i}>{p.text}</span>;
                                             return null;
                                         })}

@@ -23,6 +23,7 @@ interface ProjectData {
     description: string;
     longDescription?: string;
     stack: string[];
+    imageUrl?: string;
     videoUrl?: string;
     liveUrl?: string;
     githubUrl?: string;
@@ -51,7 +52,7 @@ const projects: ProjectData[] = [
             "Paddle",
             "WhatsApp Business API",
         ],
-        videoUrl: "/videos/fulfix.mp4",
+        imageUrl: "/projects/Fulfix.png",
         isUnderDevelopment: true,
         kpiHighlight: "15% RTO Reduction",
         impactMetrics: [
@@ -78,6 +79,7 @@ const projects: ProjectData[] = [
             "OpenRouter (AI)",
             "jsPDF",
         ],
+        imageUrl: "/projects/asas-forge.png",
         videoUrl: "/videos/asas-forge.mp4",
         liveUrl: "https://asasforge.com",
         kpiHighlight: "1.2s RAG Response",
@@ -103,6 +105,7 @@ const projects: ProjectData[] = [
             "TypeScript",
             "Redis",
         ],
+        imageUrl: "/projects/glow.png",
         videoUrl: "/videos/glow.mp4",
         liveUrl: "https://nglow.co",
         kpiHighlight: "85% Recommendation Accuracy",
@@ -128,7 +131,7 @@ const projects: ProjectData[] = [
             "Zod",
             "Supabase",
         ],
-        videoUrl: "/videos/echo-harvest.mp4",
+        imageUrl: "/projects/Echo-Harvest.png",
         isUnderDevelopment: true,
         kpiHighlight: "99.9% Success Rate",
         impactMetrics: [
@@ -187,15 +190,29 @@ function Slide({
 
             <div
                 data-cursor="OPEN"
+                onMouseMove={(event) => {
+                    const rect = event.currentTarget.getBoundingClientRect();
+                    event.currentTarget.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+                    event.currentTarget.style.setProperty("--my", `${event.clientY - rect.top}px`);
+                }}
                 onClick={() => {
                     playClick();
                     onOpen();
                 }}
                 onMouseEnter={() => playHover()}
-                className="group relative z-10 w-full max-w-6xl h-[58vh] md:h-[66vh] hairline bg-[var(--panel)] overflow-hidden cursor-pointer"
+                className="project-slide-surface group relative z-10 w-full max-w-6xl h-[58vh] md:h-[66vh] hairline bg-[var(--panel)] overflow-hidden cursor-pointer"
+                style={{ "--mx": "50%", "--my": "50%" } as React.CSSProperties}
             >
                 {/* media */}
                 <div className="absolute inset-0">
+                    {project.imageUrl && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                            src={project.imageUrl}
+                            alt=""
+                            className="absolute inset-0 h-full w-full object-cover opacity-55 grayscale-[40%] transition-all duration-700 group-hover:scale-[1.04] group-hover:opacity-80 group-hover:grayscale-0"
+                        />
+                    )}
                     {project.videoUrl ? (
                         <video
                             src={project.videoUrl}
@@ -203,12 +220,14 @@ function Slide({
                             loop
                             muted
                             playsInline
-                            className="w-full h-full object-cover opacity-40 grayscale-[35%] group-hover:opacity-70 group-hover:grayscale-0 transition-all duration-700"
+                            poster={project.imageUrl}
+                            className="absolute inset-0 w-full h-full object-cover opacity-45 grayscale-[30%] mix-blend-screen group-hover:opacity-80 group-hover:grayscale-0 transition-all duration-700"
                         />
-                    ) : (
+                    ) : !project.imageUrl ? (
                         <div className="w-full h-full bg-[var(--panel)]" />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-[#070707]/50 to-transparent" />
+                    ) : null}
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.18)_0%,rgba(7,7,7,0.42)_46%,rgba(7,7,7,0.96)_100%)]" />
+                    <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,7,7,0.82)_0%,transparent_42%,rgba(7,7,7,0.62)_100%)] opacity-80" />
                 </div>
 
                 {/* top meta row */}
@@ -243,6 +262,20 @@ function Slide({
                         <p className="font-mono text-[10px] tracking-[0.08em] text-[var(--dim)] uppercase">
                             {project.stack.slice(0, 4).join(" / ")}
                         </p>
+                        {project.impactMetrics && (
+                            <div className="mt-5 hidden grid-cols-3 gap-px overflow-hidden hairline bg-[var(--line)] md:grid">
+                                {project.impactMetrics.slice(0, 3).map((metric) => (
+                                    <div key={metric.label} className="bg-[#070707]/75 px-3 py-2 backdrop-blur">
+                                        <span className="block font-mono text-[9px] uppercase text-[var(--dim)]">
+                                            {metric.label}
+                                        </span>
+                                        <span className="mt-1 block font-display text-sm font-bold text-[var(--ink)]">
+                                            {metric.value}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex items-center gap-5 shrink-0">
@@ -358,7 +391,7 @@ export function Projects() {
             </div>
 
             <ProjectModal
-                project={selectedProject as any}
+                project={selectedProject}
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
             />

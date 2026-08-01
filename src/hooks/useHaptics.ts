@@ -12,7 +12,7 @@ export const useHaptics = () => {
 
         try {
             navigator.vibrate(pattern);
-        } catch (error) {
+        } catch {
             // Silently fail if vibration not supported or denied
         }
     };

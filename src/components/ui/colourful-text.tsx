@@ -2,24 +2,24 @@
 import React from "react";
 import { motion } from "motion/react";
 
-export function ColourfulText({ text }: { text: string }) {
-    const colors = [
-        "rgb(45, 212, 191)", // Mint
-        "rgb(34, 211, 238)", // Cyan
-        "rgb(59, 130, 246)", // Blue
-        "rgb(129, 140, 248)", // Indigo
-        "rgb(167, 139, 250)", // Violet
-        "rgb(34, 211, 238)", // Cyan (Repeat for distribution)
-    ];
+const COLORS = [
+    "rgb(45, 212, 191)", // Mint
+    "rgb(34, 211, 238)", // Cyan
+    "rgb(59, 130, 246)", // Blue
+    "rgb(129, 140, 248)", // Indigo
+    "rgb(167, 139, 250)", // Violet
+    "rgb(34, 211, 238)", // Cyan (Repeat for distribution)
+];
 
-    const [currentColors, setCurrentColors] = React.useState(colors);
+export function ColourfulText({ text }: { text: string }) {
+    const [currentColors, setCurrentColors] = React.useState(COLORS);
     const [count, setCount] = React.useState(0);
     const [isMounted, setIsMounted] = React.useState(false);
 
     React.useEffect(() => {
         setIsMounted(true);
         const interval = setInterval(() => {
-            const shuffled = [...colors].sort(() => Math.random() - 0.5);
+            const shuffled = [...COLORS].sort(() => Math.random() - 0.5);
             setCurrentColors(shuffled);
             setCount((prev) => prev + 1);
         }, 5000);

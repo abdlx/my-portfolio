@@ -7,6 +7,7 @@ import { Ticker } from "@/components/fx/Ticker";
 import { Magnetic } from "@/components/fx/Magnetic";
 import { ScrambleText } from "@/components/fx/ScrambleText";
 import { useUiSounds } from "@/hooks/useUiSounds";
+import { NETWORK } from "@/lib/network";
 
 const EMAIL = "mirzaabdulla300@gmail.com";
 
@@ -79,7 +80,7 @@ export function Contact() {
                 </div>
 
                 {/* headline */}
-                <h2 className="font-display font-bold leading-[0.95] tracking-[-0.03em] text-[var(--ink)] text-[13vw] md:text-[8.5vw] mb-14 md:mb-20">
+                <h2 className="font-display font-bold leading-[0.95] text-[var(--ink)] text-5xl sm:text-6xl md:text-8xl lg:text-9xl xl:text-[10rem] mb-14 md:mb-20">
                     <span className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
                         <motion.span
                             className="block"
@@ -146,7 +147,74 @@ export function Contact() {
 
             {/* footer */}
             <footer className="relative px-6 md:px-12 lg:px-20 pt-16 pb-8">
-                <div className="hairline-t pt-8 grid grid-cols-1 md:grid-cols-3 gap-8 items-start relative z-10">
+                {/* The rest of the domain. Three columns because there are three
+                    sites and the page is already ruled into columns — and the
+                    current one is marked with the same "← YOU ARE HERE" the
+                    fullscreen menu uses on the active chapter, so the device
+                    reads as this site's, not as a generic footer widget. */}
+                <div className="relative z-10 hairline-t pt-8">
+                    <div className="flex items-center gap-3 mb-6">
+                        <span className="h-[6px] w-[6px] bg-[var(--acid)]" />
+                        <span className="label text-[var(--dim)]">THE NETWORK — THREE SITES, ONE PERSON</span>
+                    </div>
+
+                    <ul className="grid grid-cols-1 md:grid-cols-3 gap-x-10">
+                        {NETWORK.map((site) => {
+                            const body = (
+                                <>
+                                    <span className="flex items-baseline justify-between gap-3">
+                                        <span className="font-mono text-sm md:text-base text-[var(--ink)] group-hover:text-[var(--acid)] transition-colors">
+                                            {site.domain}
+                                        </span>
+                                        {site.here ? (
+                                            // `.label` in globals.css is unlayered, so its own
+                                            // `color: var(--muted)` outranks any Tailwind
+                                            // `text-*` on the same element — this marker has to
+                                            // actually be acid, so it spells the label out in
+                                            // utilities instead of borrowing the class.
+                                            <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.28em] text-[var(--acid)]">
+                                                ← YOU ARE HERE
+                                            </span>
+                                        ) : (
+                                            <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-[var(--dim)] group-hover:text-[var(--acid)] transition-colors" />
+                                        )}
+                                    </span>
+                                    <span className="label mt-2 block text-[var(--dim)]">{site.label}</span>
+                                    <span className="mt-2 block text-sm leading-relaxed text-[var(--muted)]">
+                                        {site.line}
+                                    </span>
+                                </>
+                            );
+
+                            return (
+                                <li key={site.domain} className="hairline-t pt-5 pb-5 md:pb-0">
+                                    {/* Stated, never linked — a link that reloads the page
+                                        you're standing on is a dead end dressed as a door. */}
+                                    {/* No `group` here, so the hover states baked
+                                        into `body` stay inert — nothing that
+                                        isn't a link should light up like one. */}
+                                    {site.here ? (
+                                        <span className="block">{body}</span>
+                                    ) : (
+                                        <a
+                                            href={site.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onMouseEnter={() => playHover()}
+                                            onClick={() => playClick()}
+                                            data-cursor="VISIT"
+                                            className="group block"
+                                        >
+                                            {body}
+                                        </a>
+                                    )}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
+
+                <div className="hairline-t mt-12 pt-8 grid grid-cols-1 md:grid-cols-3 gap-8 items-start relative z-10">
                     <div className="label leading-relaxed">
                         © {new Date().getFullYear()} ABDULLAH
                         <br />

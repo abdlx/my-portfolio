@@ -8,12 +8,14 @@ import { cn } from "@/lib/utils";
 import { ScrambleText } from "@/components/fx/ScrambleText";
 import { useUiSounds } from "@/hooks/useUiSounds";
 import { useAnimationSettings } from "@/hooks/useAnimationSettings";
+import { NETWORK } from "@/lib/network";
 
 const CVWindow = dynamic(() => import("./CVWindow").then((mod) => mod.CVWindow), { ssr: false });
 
 const CHAPTERS = [
     { index: "01", title: "HELLO", href: "#home", id: "home" },
     { index: "02", title: "APPROACH", href: "#approach", id: "approach" },
+    { index: "02B", title: "SIGNAL", href: "#signal", id: "signal" },
     { index: "03", title: "WORK", href: "#work", id: "work" },
     { index: "04", title: "PROOF", href: "#proof", id: "proof" },
     { index: "05", title: "ARSENAL", href: "#arsenal", id: "arsenal" },
@@ -161,7 +163,7 @@ export function Navigation() {
                                         </span>
                                         <span
                                             className={cn(
-                                                "font-display font-bold text-4xl md:text-6xl lg:text-7xl leading-none tracking-tight transition-all duration-300 group-hover:translate-x-3 group-hover:text-[var(--acid)]",
+                                                "font-display font-bold text-4xl md:text-6xl lg:text-7xl leading-none tracking-normal transition-all duration-300 group-hover:translate-x-3 group-hover:text-[var(--acid)]",
                                                 activeId === chapter.id ? "text-[var(--acid)]" : "text-[var(--ink)]"
                                             )}
                                         >
@@ -210,7 +212,31 @@ export function Navigation() {
                                 )}
                             </div>
 
-                            <div className="flex items-center gap-6">
+                            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                                {/* The other two sites, ahead of the profiles and
+                                    fenced off from them by a rule: these are mine,
+                                    those are accounts I hold somewhere else. The
+                                    chapters above are anchors on this page, so
+                                    anything that actually leaves belongs down here
+                                    with an arrow on it. */}
+                                {NETWORK.filter((site) => !site.here).map((site) => (
+                                    <a
+                                        key={site.domain}
+                                        href={site.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label={`${site.domain} — ${site.line}`}
+                                        onMouseEnter={() => playHover()}
+                                        onClick={() => playClick()}
+                                        data-cursor="VISIT"
+                                        className="label text-[var(--muted)] hover:text-[var(--acid)] transition-colors flex items-center gap-1"
+                                    >
+                                        {site.label} <ArrowUpRight className="h-3 w-3" />
+                                    </a>
+                                ))}
+
+                                <span className="hidden md:block h-3 w-px bg-[var(--line)]" aria-hidden="true" />
+
                                 <a
                                     href="https://github.com/abdlx"
                                     target="_blank"

@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 
 interface Icon {
     x: number
@@ -20,7 +20,6 @@ function easeOutCubic(t: number): number {
 
 export function IconCloud({ iconSlugs }: IconCloudProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
-    const [iconPositions, setIconPositions] = useState<Icon[]>([])
     const [targetRotation, setTargetRotation] = useState<{
         x: number
         y: number
@@ -40,25 +39,7 @@ export function IconCloud({ iconSlugs }: IconCloudProps) {
     const imagesRef = useRef<HTMLImageElement[]>([])
     const imagesLoadedRef = useRef<boolean[]>([])
 
-    // Load icons from SimpleIcons CDN
-    useEffect(() => {
-        if (!iconSlugs) return
-
-        imagesLoadedRef.current = new Array(iconSlugs.length).fill(false)
-        const newImages = iconSlugs.map((slug, index) => {
-            const img = new Image()
-            img.crossOrigin = "anonymous"
-            img.src = `https://cdn.simpleicons.org/${slug}/white`
-            img.onload = () => {
-                imagesLoadedRef.current[index] = true
-            }
-            return img
-        })
-        imagesRef.current = newImages
-    }, [iconSlugs])
-
-    // Generate initial icon positions on a sphere
-    useEffect(() => {
+    const iconPositions = useMemo<Icon[]>(() => {
         const numIcons = iconSlugs?.length || 20
         const newIcons: Icon[] = []
 
@@ -81,7 +62,24 @@ export function IconCloud({ iconSlugs }: IconCloudProps) {
                 id: i,
             })
         }
-        setIconPositions(newIcons)
+        return newIcons
+    }, [iconSlugs])
+
+    // Load icons from SimpleIcons CDN
+    useEffect(() => {
+        if (!iconSlugs) return
+
+        imagesLoadedRef.current = new Array(iconSlugs.length).fill(false)
+        const newImages = iconSlugs.map((slug, index) => {
+            const img = new Image()
+            img.crossOrigin = "anonymous"
+            img.src = `https://cdn.simpleicons.org/${slug}/white`
+            img.onload = () => {
+                imagesLoadedRef.current[index] = true
+            }
+            return img
+        })
+        imagesRef.current = newImages
     }, [iconSlugs])
 
     const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {

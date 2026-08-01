@@ -19,7 +19,7 @@ export function Cursor() {
         const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         if (!fine || reduced) return;
 
-        setEnabled(true);
+        const enableFrame = requestAnimationFrame(() => setEnabled(true));
         document.documentElement.classList.add("has-cursor");
 
         const pos = { x: -100, y: -100 };
@@ -78,6 +78,7 @@ export function Cursor() {
         document.documentElement.addEventListener("mouseleave", onLeave);
 
         return () => {
+            cancelAnimationFrame(enableFrame);
             cancelAnimationFrame(rafId);
             window.removeEventListener("mousemove", onMove);
             window.removeEventListener("mousedown", onDown);

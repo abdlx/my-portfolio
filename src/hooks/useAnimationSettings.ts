@@ -16,6 +16,26 @@ const STORAGE_KEY = "portfolio-animation-settings";
 
 const AnimationSettingsContext = createContext<AnimationSettingsContextType | null>(null);
 
+const readStoredSettings = (prefersReducedMotion: boolean): AnimationSettings => {
+    const fallback = {
+        animationsEnabled: true,
+        reducedMotion: prefersReducedMotion,
+    };
+
+    const savedSettings = localStorage.getItem(STORAGE_KEY);
+    if (!savedSettings) return fallback;
+
+    try {
+        const parsed = JSON.parse(savedSettings) as Partial<AnimationSettings>;
+        return {
+            animationsEnabled: parsed.animationsEnabled ?? true,
+            reducedMotion: prefersReducedMotion,
+        };
+    } catch {
+        return fallback;
+    }
+};
+
 export function AnimationSettingsProvider({ children }: { children: React.ReactNode }) {
     const [settings, setSettings] = useState<AnimationSettings>({
         animationsEnabled: true,
@@ -25,37 +45,19 @@ export function AnimationSettingsProvider({ children }: { children: React.ReactN
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-        const prefersReducedMotion = mediaQuery.matches;
-
-        const savedSettings = localStorage.getItem(STORAGE_KEY);
-        if (savedSettings) {
-            try {
-                const parsed = JSON.parse(savedSettings);
-                setSettings({
-                    animationsEnabled: parsed.animationsEnabled ?? true,
-                    reducedMotion: prefersReducedMotion,
-                });
-            } catch {
-                setSettings({
-                    animationsEnabled: true,
-                    reducedMotion: prefersReducedMotion,
-                });
-            }
-        } else {
-            setSettings({
-                animationsEnabled: true,
-                reducedMotion: prefersReducedMotion,
-            });
-        }
+        const frame = requestAnimationFrame(() => {
+            setSettings(readStoredSettings(mediaQuery.matches));
+            setIsHydrated(true);
+        });
 
         const handleChange = (e: MediaQueryListEvent) => {
             setSettings((prev) => ({ ...prev, reducedMotion: e.matches }));
         };
 
         mediaQuery.addEventListener("change", handleChange);
-        setIsHydrated(true);
 
         return () => {
+            cancelAnimationFrame(frame);
             mediaQuery.removeEventListener("change", handleChange);
         };
     }, []);

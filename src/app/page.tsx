@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Hero } from "@/components/Hero";
+import { SignalBoard } from "@/components/SignalBoard";
 import { BootProvider } from "@/components/fx/Preloader";
 import { SmoothScroll } from "@/components/fx/SmoothScroll";
 import { Cursor } from "@/components/fx/Cursor";
@@ -62,6 +63,7 @@ export default function Home() {
                 />
 
                 <DeepDive />
+                <SignalBoard />
                 <Pipeline />
                 <Projects />
                 <Metrics />
@@ -115,7 +117,7 @@ export default function Home() {
 
                     <article>
                         <h3>EchoHarvest</h3>
-                        <p>Industrial-grade distributed data harvesting infrastructure using a serverless Playwright swarm on Docker. Features 'Ghost Protocol' for bot evasion.</p>
+                        <p>Industrial-grade distributed data harvesting infrastructure using a serverless Playwright swarm on Docker. Features &apos;Ghost Protocol&apos; for bot evasion.</p>
                     </article>
 
                     <h2>Contact Information</h2>

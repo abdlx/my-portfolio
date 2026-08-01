@@ -98,7 +98,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
             resizeObserver.disconnect();
             window.removeEventListener("resize", updatePath);
         };
-    }, [calculatePath]);
+    }, [calculatePath, containerRef]);
 
     return (
         <svg

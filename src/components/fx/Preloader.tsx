@@ -42,36 +42,41 @@ export function BootProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const alreadyBooted = sessionStorage.getItem("signal-booted") === "1";
         const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        let setupFrame = 0;
 
         if (alreadyBooted || reduced) {
-            setPhase("done");
-            return;
+            setupFrame = requestAnimationFrame(() => setPhase("done"));
+            return () => cancelAnimationFrame(setupFrame);
         }
 
-        setPhase("booting");
         document.documentElement.style.overflow = "hidden";
 
-        const duration = 1900;
-        const start = performance.now();
-        const tick = (now: number) => {
-            const t = Math.min((now - start) / duration, 1);
-            // ease with tiny stalls so it feels like real work
-            const eased = t < 1 ? 1 - Math.pow(1 - t, 2.4) : 1;
-            setProgress(Math.min(100, Math.floor(eased * 100 + (t < 1 ? Math.sin(t * 40) * 1.5 : 0))));
-            if (t < 1) {
-                rafRef.current = requestAnimationFrame(tick);
-            } else {
-                setProgress(100);
-                setTimeout(() => {
-                    sessionStorage.setItem("signal-booted", "1");
-                    document.documentElement.style.overflow = "";
-                    setPhase("done");
-                }, 350);
-            }
-        };
-        rafRef.current = requestAnimationFrame(tick);
+        setupFrame = requestAnimationFrame(() => {
+            setPhase("booting");
+
+            const duration = 1900;
+            const start = performance.now();
+            const tick = (now: number) => {
+                const t = Math.min((now - start) / duration, 1);
+                // ease with tiny stalls so it feels like real work
+                const eased = t < 1 ? 1 - Math.pow(1 - t, 2.4) : 1;
+                setProgress(Math.min(100, Math.floor(eased * 100 + (t < 1 ? Math.sin(t * 40) * 1.5 : 0))));
+                if (t < 1) {
+                    rafRef.current = requestAnimationFrame(tick);
+                } else {
+                    setProgress(100);
+                    setTimeout(() => {
+                        sessionStorage.setItem("signal-booted", "1");
+                        document.documentElement.style.overflow = "";
+                        setPhase("done");
+                    }, 350);
+                }
+            };
+            rafRef.current = requestAnimationFrame(tick);
+        });
 
         return () => {
+            cancelAnimationFrame(setupFrame);
             cancelAnimationFrame(rafRef.current);
             document.documentElement.style.overflow = "";
         };

@@ -53,7 +53,7 @@ export function SectionHeading({
                     whileInView={{ y: 0 }}
                     viewport={{ once: true, margin: "-15% 0px" }}
                     transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                    className="font-display text-[11vw] leading-[0.95] md:text-6xl lg:text-7xl xl:text-8xl font-bold text-[var(--ink)]"
+                    className="font-display text-5xl leading-[0.98] sm:text-6xl md:text-7xl lg:text-8xl font-bold text-[var(--ink)]"
                 >
                     {children}
                 </motion.h2>

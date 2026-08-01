@@ -19,7 +19,8 @@ export const TracingBeam = ({
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
-        setIsMounted(true);
+        const frame = requestAnimationFrame(() => setIsMounted(true));
+        return () => cancelAnimationFrame(frame);
     }, []);
 
     if (!isMounted) {
@@ -46,13 +47,14 @@ const TracingBeamInner = ({
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const shouldReduceMotion = useReducedMotion();
-    const [isMobile, setIsMobile] = useState(false);
+    const [isMobile, setIsMobile] = useState(
+        () => typeof window !== "undefined" && window.innerWidth < 768
+    );
 
     useEffect(() => {
         const checkMobile = () => {
             setIsMobile(window.innerWidth < 768);
         };
-        checkMobile();
         window.addEventListener("resize", checkMobile);
         return () => window.removeEventListener("resize", checkMobile);
     }, []);
@@ -66,21 +68,23 @@ const TracingBeamInner = ({
     const [svgHeight, setSvgHeight] = useState(0);
 
     useEffect(() => {
-        if (contentRef.current) {
-            setSvgHeight(contentRef.current.offsetHeight);
-        }
-
         const resizeObserver = new ResizeObserver((entries) => {
-            for (let entry of entries) {
+            for (const entry of entries) {
                 setSvgHeight(entry.target.clientHeight);
             }
         });
 
-        if (contentRef.current) {
-            resizeObserver.observe(contentRef.current);
-        }
+        const element = contentRef.current;
+        if (element) resizeObserver.observe(element);
 
-        return () => resizeObserver.disconnect();
+        const frame = requestAnimationFrame(() => {
+            if (element) setSvgHeight(element.offsetHeight);
+        });
+
+        return () => {
+            cancelAnimationFrame(frame);
+            resizeObserver.disconnect();
+        };
     }, []);
 
     const y1 = useSpring(

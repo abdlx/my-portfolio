@@ -1,9 +1,8 @@
 "use client";
 
 import React from "react";
-import { FileText, X, ExternalLink, Download } from "lucide-react";
+import { FileText, X, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
 import { useUiSounds } from "@/hooks/useUiSounds";
 
 export function CVWindow({ 

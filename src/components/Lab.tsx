@@ -9,16 +9,21 @@ interface Process {
     task: string;
     tag: string;
     status: "RUNNING" | "IDLE" | "LOOPING";
+    /** Turns the task into a link. A process you can actually go and look at. */
+    href?: string;
 }
 
 const PROCESSES: Process[] = [
     { pid: "0x01", task: "Running Llama-3 locally on Ryzen 7 5850U", tag: "EDGE AI", status: "RUNNING" },
     { pid: "0x02", task: "Shipping Portfolio V3 — the one you're scrolling", tag: "META", status: "RUNNING" },
-    { pid: "0x03", task: "Refurbishing dual Xeon X5670 workstation", tag: "HARDWARE", status: "IDLE" },
-    { pid: "0x04", task: "Testing OpenAI Realtime API latency", tag: "RESEARCH", status: "RUNNING" },
-    { pid: "0x05", task: "Multi-agent orchestration experiments", tag: "LANGGRAPH", status: "RUNNING" },
-    { pid: "0x06", task: "Hardening Supabase RLS policies", tag: "SECURITY", status: "IDLE" },
-    { pid: "0x07", task: "Phonk & funk carioca on loop", tag: "AUDIO", status: "LOOPING" },
+    // Sits next to the meta row on purpose: both are this domain talking about
+    // itself, and this is the one process on the list you can open in a tab.
+    { pid: "0x03", task: "Hand-building sites — the gallery at sites.abdlx.com", tag: "CRAFT", status: "RUNNING", href: "https://sites.abdlx.com" },
+    { pid: "0x04", task: "Refurbishing dual Xeon X5670 workstation", tag: "HARDWARE", status: "IDLE" },
+    { pid: "0x05", task: "Testing OpenAI Realtime API latency", tag: "RESEARCH", status: "RUNNING" },
+    { pid: "0x06", task: "Multi-agent orchestration experiments", tag: "LANGGRAPH", status: "RUNNING" },
+    { pid: "0x07", task: "Hardening Supabase RLS policies", tag: "SECURITY", status: "IDLE" },
+    { pid: "0x08", task: "Phonk & funk carioca on loop", tag: "AUDIO", status: "LOOPING" },
 ];
 
 const STATUS_COLOR: Record<Process["status"], string> = {
@@ -59,7 +64,19 @@ export function Lab() {
                         >
                             <span className="text-[var(--dim)] tabular-nums">{proc.pid}</span>
                             <span className="text-[var(--ink)] truncate group-hover:text-[var(--acid)] transition-colors">
-                                {proc.task}
+                                {proc.href ? (
+                                    <a
+                                        href={proc.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        data-cursor="VISIT"
+                                        className="underline decoration-[var(--dim)] underline-offset-4 hover:decoration-[var(--acid)] transition-colors"
+                                    >
+                                        {proc.task}
+                                    </a>
+                                ) : (
+                                    proc.task
+                                )}
                             </span>
                             <span className="label hidden md:block">{proc.tag}</span>
                             <span className={`${STATUS_COLOR[proc.status]} text-right tabular-nums`}>

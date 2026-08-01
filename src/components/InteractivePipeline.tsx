@@ -7,6 +7,10 @@ import {
   ConnectionMode,
   useNodesState,
   useEdgesState,
+  addEdge,
+  type Connection,
+  type Edge,
+  type Node,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Brain, User, Database, Globe, Monitor, FileText, Zap } from "lucide-react";
@@ -15,7 +19,7 @@ import { cn } from "@/lib/utils";
 const nodeClassName = "px-5 py-3.5 border border-[rgba(241,240,233,0.12)] bg-[#0b0b0c]/90 backdrop-blur-sm text-[#F1F0E9] flex items-center gap-3 shadow-2xl min-w-[150px] font-mono text-xs uppercase tracking-wider";
 
 export function InteractivePipeline() {
-  const initialNodes = [
+  const initialNodes: Node[] = [
     // Inputs
     {
       id: 'user',
@@ -76,7 +80,7 @@ export function InteractivePipeline() {
     },
   ];
 
-  const initialEdges = [
+  const initialEdges: Edge[] = [
     { id: 'e-user-brain', source: 'user', target: 'brain', animated: true, style: { stroke: '#4b4b44' } },
     { id: 'e-db-brain', source: 'db', target: 'brain', animated: true, style: { stroke: '#4b4b44' } },
     { id: 'e-api-brain', source: 'api', target: 'brain', animated: true, style: { stroke: '#4b4b44' } },
@@ -89,16 +93,16 @@ export function InteractivePipeline() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = React.useCallback(
-    (params: any) => setEdges((eds) => {
-        const isOutputSide = ['ui', 'report', 'action'].includes(params.target);
-        return [
-            ...eds,
+    (params: Connection) => setEdges((eds) => {
+        const isOutputSide = params.target ? ['ui', 'report', 'action'].includes(params.target) : false;
+        return addEdge(
             {
                 ...params,
                 animated: true,
-                style: { stroke: isOutputSide ? '#CBFF4A' : '#4b4b44' }
-            }
-        ];
+                style: { stroke: isOutputSide ? '#CBFF4A' : '#4b4b44' },
+            },
+            eds
+        );
     }),
     [setEdges]
   );

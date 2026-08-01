@@ -83,7 +83,12 @@ const jsonLd = {
   "image": "https://abdlx.com/photo.jpg", // Update if available
   "jobTitle": "AI Product Engineer",
   "url": "https://abdlx.com",
+  // The two sibling sites are listed first: `sameAs` is how a crawler is told
+  // that three separate domains are one entity, so without them about. and
+  // sites. are indexed as unrelated strangers who happen to share a name.
   "sameAs": [
+    "https://about.abdlx.com",
+    "https://sites.abdlx.com",
     "https://www.linkedin.com/in/mirza-abdullah-baig-ai-dev/",
     "https://github.com/abdlx" // Assuming from CorpusName
   ],

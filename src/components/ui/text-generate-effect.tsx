@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { motion, stagger, useAnimate } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -15,28 +15,21 @@ export const TextGenerateEffect = ({
     duration?: number;
 }) => {
     const [scope, animate] = useAnimate();
-    const [isClient, setIsClient] = useState(false);
     const wordsArray = words.split(" ");
 
     useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    useEffect(() => {
-        if (isClient) {
-            animate(
-                "span",
-                {
-                    opacity: 1,
-                    filter: filter ? "blur(0px)" : "none",
-                },
-                {
-                    duration: duration ? duration : 1,
-                    delay: stagger(0.1),
-                }
-            );
-        }
-    }, [scope.current, isClient, animate, duration, filter]);
+        animate(
+            "span",
+            {
+                opacity: 1,
+                filter: filter ? "blur(0px)" : "none",
+            },
+            {
+                duration: duration ? duration : 1,
+                delay: stagger(0.1),
+            }
+        );
+    }, [animate, duration, filter]);
 
     const renderWords = () => {
         return (

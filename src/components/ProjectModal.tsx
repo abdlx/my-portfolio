@@ -14,6 +14,7 @@ interface Project {
     description: string;
     longDescription?: string;
     stack: string[];
+    imageUrl?: string;
     videoUrl?: string;
     liveUrl?: string;
     githubUrl?: string;
@@ -100,6 +101,14 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                         <div className="overflow-y-auto" data-lenis-prevent>
                             {/* media */}
                             <div className="relative w-full aspect-video md:aspect-[21/9] overflow-hidden bg-[#070707] group">
+                                {project.imageUrl && (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                        src={project.imageUrl}
+                                        alt=""
+                                        className="absolute inset-0 h-full w-full object-cover opacity-80"
+                                    />
+                                )}
                                 {project.videoUrl ? (
                                     <>
                                         <video
@@ -108,7 +117,8 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                             loop
                                             muted={isMuted}
                                             playsInline
-                                            className="w-full h-full object-cover"
+                                            poster={project.imageUrl}
+                                            className="absolute inset-0 w-full h-full object-cover"
                                         />
                                         <button
                                             onClick={(e) => {
@@ -123,12 +133,12 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                             {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                                         </button>
                                     </>
-                                ) : (
+                                ) : !project.imageUrl ? (
                                     <div className="w-full h-full flex flex-col items-center justify-center text-[var(--dim)] font-mono relative">
                                         <ShieldAlert className="w-10 h-10 mb-4 opacity-30" />
                                         <span className="tracking-[0.3em] opacity-50 animate-pulse text-xs">[ SIGNAL_LOST ]</span>
                                     </div>
-                                )}
+                                ) : null}
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0c] via-transparent to-transparent pointer-events-none" />
                             </div>
 
@@ -137,7 +147,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                 {/* title row */}
                                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 hairline-b pb-8">
                                     <div className="space-y-4 min-w-0">
-                                        <h2 className="font-display font-bold text-4xl md:text-6xl leading-[0.95] tracking-tight text-[var(--ink)]">
+                                        <h2 className="font-display font-bold text-4xl md:text-6xl leading-[0.98] tracking-normal text-[var(--ink)]">
                                             {project.title}
                                         </h2>
                                         {project.isUnderDevelopment && (

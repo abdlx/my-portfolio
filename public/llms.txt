@@ -39,6 +39,11 @@ Full-Stack Engineer & AI Pipeline Architect specializing in building production-
 - **Key Feature**: 'Ghost Protocol' for bot evasion and serverless Playwright swarm on Docker.
 - **Stack**: Next.js, Playwright, Docker, Redis.
 
+## Related Sites (same person, same domain)
+- **https://abdlx.com** — The work. Engineering, AI systems, and what actually shipped. This site.
+- **https://about.abdlx.com** — The person. Background, current focus, and how to get hold of him.
+- **https://sites.abdlx.com** — The craft. A gallery of design-led websites built by hand.
+
 ## Contact & Socials
 - **LinkedIn**: https://www.linkedin.com/in/mirza-abdullah-baig-ai-dev/
 - **Email**: mirzaabdulla300@gmail.com
