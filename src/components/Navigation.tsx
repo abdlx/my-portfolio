@@ -86,7 +86,7 @@ export function Navigation() {
                     className="pointer-events-auto"
                 >
                     <ScrambleText
-                        text="ABDULLAH©"
+                        text="abdlx."
                         trigger="hover"
                         className="font-mono text-xs font-bold tracking-[0.22em] text-[var(--ink)]"
                     />

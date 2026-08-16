@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 import { Hero } from "@/components/Hero";
-import { SignalBoard } from "@/components/SignalBoard";
 import { BootProvider } from "@/components/fx/Preloader";
 import { SmoothScroll } from "@/components/fx/SmoothScroll";
 import { Cursor } from "@/components/fx/Cursor";
@@ -10,7 +9,6 @@ import { Ticker } from "@/components/fx/Ticker";
 
 // Dynamic imports for components below the fold
 const DeepDive = dynamic(() => import("@/components/DeepDive").then(mod => mod.DeepDive), { ssr: false });
-const Pipeline = dynamic(() => import("@/components/Pipeline").then(mod => mod.Pipeline), { ssr: false });
 const Projects = dynamic(() => import("@/components/Projects").then(mod => mod.Projects), { ssr: false });
 const Metrics = dynamic(() => import("@/components/Metrics").then(mod => mod.Metrics), { ssr: false });
 const Testimonials = dynamic(() => import("@/components/Testimonials").then(mod => mod.Testimonials), { ssr: false });
@@ -63,8 +61,6 @@ export default function Home() {
                 />
 
                 <DeepDive />
-                <SignalBoard />
-                <Pipeline />
                 <Projects />
                 <Metrics />
                 <Testimonials />
